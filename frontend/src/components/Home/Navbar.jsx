@@ -31,7 +31,7 @@ const Navbar = ({navigate}) => {
     }
     const notify = ()=>{toast.success('You are being log out')}
     return (
-        <nav className='flex justify-between w-screen fixed top-0 text-2xl text-white bg-white/5 backdrop-blur-2xl items-center min-h-[10vh] max-h-max py-3 px-5 '>
+        <nav className='flex justify-between w-screen text-2xl text-white bg-white/5 backdrop-blur-2xl items-center min-h-[10vh] max-h-max py-3 px-5 '>
             <div>
                 <Link to='/' className='text-purple-400 text-2xl sm:text-4xl md:text-5xl font-bold'>BasketFiller</Link>
             </div>

@@ -35,7 +35,7 @@ pauseOnHover: false,
 draggable: true,
 progress: undefined,
 theme: "dark",
-transition:{Bounce},
+transition:Bounce,
 });}
 
 // Handling the Input given by user

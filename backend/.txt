@@ -1,0 +1,23 @@
+User can see products 
+user can write review 
+user can add a product to cart
+User can purchase or checkout and see the progress of the product 
+
+Products should have a
+ /api/product- route for sending all the products to the frontend
+ /api/product/:id-route where all the details of that products are given
+
+
+Owner Routes
+{isadmin true is required to access this routes}
+/api/product/create-Owner can create a product-{price title description images-[thumbnail,productImages]}
+/api/product/edit/:id-owner can edit a product-{price title description image-[thumbnail,productImages]} 
+/api/admin/user/delete-Owner can delete a User
+/api/admin/orders-{
+   /api/admin/user/:id -Owner gets data from users checked in products and can select in Which state the Product Actually is-{
+manually-can select {
+    default-inPogress,
+options-preparing,delivering,}
+
+/api/owner/user/:id automatically after four days it should be shown to user that product delivered and the time taken by default should be given 4 days from the purchase }
+}

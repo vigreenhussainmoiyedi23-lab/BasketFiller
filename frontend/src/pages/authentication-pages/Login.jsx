@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Input from '../../components/authentication/input'
 import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/AxiosInstance'
-import { ToastContainer, toast ,Slide} from 'react-toastify';
+import { ToastContainer, toast ,Bounce} from 'react-toastify';
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState('')
@@ -35,7 +35,7 @@ const Login = () => {
       draggable: true,
       progress: undefined,
       theme: "dark",
-      transition: {Slide},
+      transition: Bounce,
     });
   }
 
