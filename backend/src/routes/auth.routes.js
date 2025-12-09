@@ -9,10 +9,10 @@ const {LoginHandler,LogoutHandler,RegisterHandler}=require('../controllers/auth.
 const {UserCanAuthenticate}=require('../middlewares/AuthenticationMiddleware')
 
 // register
-router.post('/register',RegisterValidator,validate,UserCanAuthenticate,RegisterHandler)
+router.post('/register',UserCanAuthenticate,RegisterValidator,validate,RegisterHandler)
 
 // login
-router.post('/login',LoginValidator,validate,UserCanAuthenticate,LoginHandler)
+router.post('/login',UserCanAuthenticate,LoginValidator,validate,LoginHandler)
 
 // log out 
 router.get('/logout',LogoutHandler)

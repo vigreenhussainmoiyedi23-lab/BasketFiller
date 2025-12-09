@@ -3,7 +3,7 @@ const {FindUser}=require('../services/user.service')
 async function UserCanAuthenticate(req, res, next) {
     const token = req.cookies.token
     const decoded = VerifyToken(token)
-    if (decoded) return res.status(400).json({ success: false, message: 'you are already Logged In' })
+    if (decoded) return res.status(400).json({ success: false,redirectTo:'/', message: 'you are already Logged In' })
     next()
 }
 
