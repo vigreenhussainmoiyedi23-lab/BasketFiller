@@ -9,8 +9,8 @@ const userSchema = mongoose.Schema({
     address:String,
     isadmin:{type:Boolean,default:false},
     CartItems: [{type:mongoose.Schema.Types.ObjectId,ref:'product'}],
-    CheckedOutProducts: [{type:mongoose.Schema.Types.ObjectId,ref:'product'}],
-    DeliveredProducts: [{type:mongoose.Schema.Types.ObjectId,ref:'product'}]
+    CheckedOutOrders: [{type:mongoose.Schema.Types.ObjectId,ref:'order'}],
+    DeliveredOrders: [{type:mongoose.Schema.Types.ObjectId,ref:'order'}]
 })
 
 

@@ -3,19 +3,19 @@ import Input from '../../components/authentication/input';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/AxiosInstance';
 
-const EditProfilePic = () => {
+const UpdateProfile = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [user, setUser] = useState({});
-    const [username, setUsername] = useState('');
-    const [profilePic, setProfilePic] = useState(null);
     const navigate = useNavigate();
-
+    const [updateDets, setUpdateDets] = useState({
+        oldPassword: '',
+        newPassword: ''
+    })
     // 🧩 Fetch current user
     const CanAccess = async () => {
         try {
             const res = await axiosInstance.get('/user/profile');
             setUser(res.data.user);
-            setUsername(res.data.user.username || '');
         } catch (error) {
             const data = error.response?.data;
             if (data?.redirectTo) navigate(data.redirectTo);
@@ -26,29 +26,13 @@ const EditProfilePic = () => {
         CanAccess();
     }, []);
 
-    // 🧩 Handle file change
-    const handleFileChange = (e) => {
-        setProfilePic(e.target.files[0]); // actual file object
-    };
 
-    // 🧩 Handle form submit
+    // Handle form submit
     const submitHandler = async (e) => {
         e.preventDefault();
-
+        console.log(updateDets)
         try {
-            const fd = new FormData(); // create multipart form data
-            fd.append('username', username);
-            fd.append('profilePic', profilePic); // must match multer field name
-
-            const res = await axiosInstance.post(
-                `/user/profile/edit/${user?._id}`,
-                fd,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
+            const res = await axiosInstance.post(`/user/profile/security/${user?._id}`, updateDets, Headers = { 'Content-Type': 'application/json' });
             navigate('/profile')
         } catch (error) {
             const data = error.response?.data;
@@ -69,47 +53,46 @@ const EditProfilePic = () => {
         >
             <form
                 onSubmit={submitHandler}
-                encType="multipart/form-data"
                 className="flex rounded-2xl gap-2 flex-col justify-center items-center shadow shadow-[#11111161] bg-black/20 h-[50%] w-[max(320px,80%)] backdrop-blur-md"
             >
-                <h1 className="md:text-3xl sm:text-2xl text-xl font-bold font-mono">Update Profile Picture</h1>
+                <h1 className="sm:text-2xl md:text-3xl text-xl font-bold font-mono">Update Profile Picture</h1>
 
                 <label className="text-sm mt-2 text-gray-500 font-semibold" htmlFor="username">
                     Username
                 </label>
                 <Input
-                    name="username"
+                    name="oldPassword"
                     className='sm:scale-100 scale-75'
-                    onChange={(e) => setUsername(e.target.value)}
-                    value={username}
-                    placeholder="Enter your username"
+                    onChange={(e) => setUpdateDets({ ...updateDets, oldPassword: e.target.value })}
+                    value={updateDets.oldPassword}
+                    placeholder="Your Current Password"
                 />
 
                 <label className="text-sm mt-2 text-gray-500 font-semibold" htmlFor="profilePic">
                     Profile Picture
                 </label>
-                <input
-                    type="file"
-                    name="profilePic"
-                    
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className='bg-white/20'
+                <Input
+                    name="newPassword"
+                    className='sm:scale-100 scale-75'
+                    onChange={(e) => setUpdateDets({ ...updateDets, newPassword: e.target.value })}
+                    value={updateDets.newPassword}
+                    placeholder='Enter New Password'
                 />
                 <div className='w-full h-max flex items-center justify-evenly '>
 
-                <button
-                    type="submit"
-                    className="w-[max(200px,20%)] sm:scale-100 scale-75 text-gray-700 py-2 px-5 bg-purple-200 text-xl font-semibold rounded-full"
-                >
-                    Save
-                </button>
-                <button
-                    onClick={(e) => {e.preventDefault(); navigate('/profile') }}
-                    className="w-[max(200px,20%)] sm:scale-100 scale-75 text-gray-700 py-2 px-5 bg-purple-200 text-xl font-semibold rounded-full"
-                >
-                    Go back
-                </button>
+                    <button
+                        type="submit"
+                        
+                        className="w-[max(200px,20%)] sm:scale-100 scale-75 text-gray-700 py-2 px-5 bg-purple-200 text-xl font-semibold rounded-full"
+                    >
+                        Update
+                    </button>
+                    <button
+                        onClick={(e) => {e.preventDefault(); navigate('/profile') }}
+                        className="w-[max(200px,20%)] sm:scale-100 scale-75 text-gray-700 py-2 px-5 bg-purple-200 text-xl font-semibold rounded-full"
+                    >
+                        Go back
+                    </button>
                 </div>
 
                 {errorMessage && <p className="font-semibold text-sm text-red-600">{errorMessage}</p>}
@@ -118,4 +101,4 @@ const EditProfilePic = () => {
     );
 };
 
-export default EditProfilePic;
+export default UpdateProfile;

@@ -14,7 +14,7 @@ const Home = () => {
     async function CanAcces() {
         try {
             
-            const result =await axiosInstance.post('/user')
+            const result =await axiosInstance.get('/product')
             if(result.data.redirectTo)navigate(result.data.redirectTo)
             
         } catch (error) {

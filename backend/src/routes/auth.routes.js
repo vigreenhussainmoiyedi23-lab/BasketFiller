@@ -8,13 +8,11 @@ const {LoginHandler,LogoutHandler,RegisterHandler}=require('../controllers/auth.
 // Middlewares
 const {UserCanAuthenticate}=require('../middlewares/AuthenticationMiddleware')
 
-// register
+// User Auth Routes
 router.post('/register',UserCanAuthenticate,RegisterValidator,validate,RegisterHandler)
-
-// login
-router.post('/login',UserCanAuthenticate,LoginValidator,validate,LoginHandler)
-
-// log out 
+router.post('/login',UserCanAuthenticate,LoginValidator,validate,LoginHandler) 
 router.get('/logout',LogoutHandler)
+// Admin Auth Routes Will Come here
+
 
 module.exports = router;
