@@ -3,6 +3,7 @@ const productModel = require('../models/product.model')
 const upload = require('../config/multer')
 const productUploadMiddleware = require('../middlewares/ProductUpload')
 const Router = express.Router()
+const {productValidation,validate}=require('../utils/express-validator')
 
 Router.get('/', async (req, res) => {
 
@@ -15,15 +16,15 @@ Router.get('/', async (req, res) => {
     }
 })
 
-Router.post('/create', productUploadMiddleware, async (req, res) => {
+Router.post('/create', productUploadMiddleware,productValidation,validate, async (req, res) => {
     // req.files will be an object containing arrays for each field
     const thumbnailFile = req.files['thumbnail'] ? req.files['thumbnail'][0] : null;
     const productImagesFiles = req.files['productImages'] || [];
     const { title, price, discount, description } = req.body
+    console.log(thumbnailFile,productImagesFiles)
     if (!thumbnailFile || productImagesFiles.length === 0) {
         return res.status(400).json({ message: 'Both thumbnail and product images are required.' });
     }
-
     try {
         // Upload thumbnail to ImageKit
         const thumbnailUpload = await imagekit.upload({

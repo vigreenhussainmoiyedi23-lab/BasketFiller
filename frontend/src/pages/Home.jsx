@@ -10,38 +10,39 @@ import WhyChooseUs from '../components/Home/WhyChooseUs'
 import CategoriesSection from '../components/Home/CategoriesSection'
 
 const Home = () => {
-     const navigate=useNavigate()
-    async function CanAcces() {
-        try {
-            
-            const result =await axiosInstance.get('/product')
-            if(result.data.redirectTo)navigate(result.data.redirectTo)
-            
-        } catch (error) {
-            const data=error.response.data
-            if (data) {
-                navigate(data.redirectTo)
-            }
-        }}
+  const navigate = useNavigate()
+  async function CanAcces() {
+    try {
 
-        useEffect(() => {
-          CanAcces()
-        
-          
-        }, [])
-        
+      const result = await axiosInstance.get('/product')
+      if (result.data.redirectTo) navigate(result.data.redirectTo)
+
+    } catch (error) {
+      const data = error.response.data
+      if (data) {
+        navigate(data.redirectTo)
+      }
+    }
+  }
+
+  useEffect(() => {
+    CanAcces()
+
+
+  }, [])
+
 
   return (
     <div className=' w-full overflow-x-hidden  backdrop-blur-[10px] min-h-full max-h-max bg-linear-to-br from-black via-black/97  to-black border border-white/10 rounded-xl'
     >
-      <Navbar navigate={navigate}/>
-   
-      <Hero/>
-      <FeaturedProducts/>
-      <CategoriesSection/>
-      <WhyChooseUs/>
-      <AboutUs/>
-      <Footer/>
+      <Navbar navigate={navigate} />
+
+      <Hero />
+      <FeaturedProducts />
+      <CategoriesSection />
+      <WhyChooseUs />
+      <AboutUs />
+      <Footer />
     </div>
   )
 }

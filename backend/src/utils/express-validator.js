@@ -21,11 +21,27 @@ function validate(req,res,next) {
 
 const LoginValidator=[
     body('email').isEmail().withMessage('Invalid Email').bail().isLength({min:10}).withMessage('Invalid Email').bail(),
-    body('password').isLength({min:8}).withMessage('Weak Password')
+    body('password').isLength({min:8}).withMessage('Password must be atleast 8 chars long')
 ]
 
+const productValidation = [
+  body("title")
+  .notEmpty().withMessage("Title is required")
+  .isLength({ min: 3 }).withMessage("Title must be at least 3 characters"),
+  body("description")
+    .notEmpty().withMessage("Description is required")
+    .isLength({ min: 10 }).withMessage("Description must be at least 10 characters"),
+  body("price")
+    .notEmpty().withMessage("Price is required")
+    .isFloat({ gt: 0 }).withMessage("Price must be greater than 0"),
+  body("discount")
+    .optional()
+    .isFloat({ min: 0, max: 100 })
+    .withMessage("Discount must be between 0 and 100"),
+];
 module.exports={
     RegisterValidator,
     validate,
-    LoginValidator
+    LoginValidator,
+    productValidation
 }
