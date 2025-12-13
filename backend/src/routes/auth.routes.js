@@ -12,7 +12,6 @@ const {UserCanAuthenticate}=require('../middlewares/AuthenticationMiddleware')
 router.post('/register',UserCanAuthenticate,RegisterValidator,validate,RegisterHandler)
 router.post('/login',UserCanAuthenticate,LoginValidator,validate,LoginHandler) 
 router.get('/logout',LogoutHandler)
-// Admin Auth Routes Will Come here
 
 
 module.exports = router;

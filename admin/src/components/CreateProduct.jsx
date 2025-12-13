@@ -11,8 +11,8 @@ const CreateProduct = () => {
   const [photos, setPhotos] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [discount, setDiscount] = useState("");
+  const [price, setPrice] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
 
  const handleSubmit = async (e) => {
@@ -36,7 +36,12 @@ const CreateProduct = () => {
     const result = await axiosInstance.post("/product/create", fd, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log(result.data);
+    setDescription('')
+    setTitle('')
+    setPrice(0)
+    setDiscount(0)
+    setPhotos([])
+    setThumbnail(null)
   } catch (error) {
     console.error("Upload failed:", error);
   }

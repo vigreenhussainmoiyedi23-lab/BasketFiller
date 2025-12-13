@@ -1,7 +1,7 @@
 import axios from "axios";
-
+const baseurl="http://localhost:5000"
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api", // 👈 your backend base URL
+  baseURL: `${baseurl}/api`, // 👈 your backend base URL
   withCredentials: true, // 👈 allows sending cookies (for auth)
   headers: {
     "Content-Type": "application/json",
