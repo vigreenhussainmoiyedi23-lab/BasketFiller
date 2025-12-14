@@ -47,7 +47,7 @@ setTimeout(() => {
 }, 3000);
 
   return (
-    <div className="rounded-md shadow-md drop-shadow-2xl shadow-black/50 h-max min-h-75 w-50 md:w-full  px-5 py-2 bg-white/20 backdrop-blur-3xl overflow-hidden">
+    <div className="rounded-md self-center shadow-md drop-shadow-2xl shadow-black/50 h-max mx-auto min-h-75 w-full max-w-md  px-5 py-2 bg-white backdrop-blur-3xl overflow-hidden">
       {/* 🖼️ Image */}
       <div className="relative w-full h-40 rounded-md overflow-hidden">
         {isLoading && <Skeleton width="100%" height={160} />}

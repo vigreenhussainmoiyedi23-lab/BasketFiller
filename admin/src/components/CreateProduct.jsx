@@ -33,9 +33,7 @@ const CreateProduct = () => {
   }
 
   try {
-    const result = await axiosInstance.post("/product/create", fd, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    const result = await axiosInstance.post("/product/create", fd);
     setDescription('')
     setTitle('')
     setPrice(0)
@@ -43,7 +41,14 @@ const CreateProduct = () => {
     setPhotos([])
     setThumbnail(null)
   } catch (error) {
-    console.error("Upload failed:", error);
+     const data=error?.response?.data;
+        console.log(data)
+        if (error.status===401) {
+          return  alert("You are not the admin.");
+        }
+        if (data?.redirectTo) {
+            navigate(data.redirectTo);
+        }
   }
 };
 
@@ -158,7 +163,7 @@ const CreateProduct = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="bg-cyan-600 hover:bg-cyan-700 transition-all text-white font-semibold py-3 rounded-xl shadow-md mt-4"
+            className="bg-cyan-600 active:bg-cyan-900 active:scale-95 hover:bg-cyan-700 transition-all text-white font-semibold py-3 rounded-xl shadow-md mt-4"
           >
             Upload Product
           </button>
