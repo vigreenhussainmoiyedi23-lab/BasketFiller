@@ -60,7 +60,7 @@ async function DeleteHandler(req, res) {
 
 async function EditHandler(req, res) {
     try {
-        const { title, price, discount, description } = req.body;
+        const { title,stock, price, discount, description } = req.body;
 
         // Find product by ID
         const product = await productModel.findOne({ _id: req.params.id });
@@ -75,6 +75,7 @@ async function EditHandler(req, res) {
         if (price) product.price = price;
         if (discount) product.discount = discount;
         if (description) product.description = description;
+        if (stock) product.stock = stock;
 
         // Save updated product
         await product.save();
@@ -90,7 +91,7 @@ async function CreateHandler(req, res) {
     // req.files will be an object containing arrays for each field
     const thumbnailFile = req.files['thumbnail'] ? req.files['thumbnail'][0] : null;
     const productImagesFiles = req.files['productImages'] || [];
-    const { title, price, discount, description } = req.body
+    const { title,stock, price, discount, description } = req.body
 
     if (!thumbnailFile || productImagesFiles.length === 0) {
         return res.status(400).json({ message: 'Both thumbnail and product images are required.' });
@@ -122,14 +123,14 @@ async function CreateHandler(req, res) {
             title,
             description,
             price,
+            stock,
             discount,
             thumbnail: thumbnailUrl,
             photos: imageUrls
         })
         res.status(200).json({
             message: 'Upload successful',
-            thumbnailUrl,
-            imageUrls
+            product: createdProduct
         });
 
     } catch (error) {

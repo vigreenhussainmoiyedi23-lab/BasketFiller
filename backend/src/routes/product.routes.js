@@ -16,7 +16,7 @@ Router.get('/filter', FilterHandler);
 // Admin only routes Protected routes
 Router.post('/create', isadmin, productUploadMiddleware, productValidation, validate, CreateHandler);
 Router.post('/edit/:id', isadmin, EditHandler );
-Router.post('/delete/:id', isadmin, DeleteHandler)
+Router.get('/delete/:id', isadmin, DeleteHandler)
 
 
 module.exports = Router

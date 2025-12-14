@@ -14,6 +14,7 @@ const productSchema = mongoose.Schema({
     totalAmount: Number,       // sum of all products’ prices * quantities
     status: { type: String, default: "pending" },
     createdAt: { type: Date, default: Date.now },
+    paymentOption:{type:String,enum:['COD','ONLINE'], default:'COD'},
 }, {
     toJSON: { virtuals: true }  // 👈 important
 })

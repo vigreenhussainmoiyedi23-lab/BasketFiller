@@ -7,6 +7,7 @@ const productSchema = mongoose.Schema({
     thumbnail: String,
     photos: [{ type: String }],
     price: Number,
+    stock:{type:Number,default:0},
     discount: {
         type: Number,
         min: 0,

@@ -34,6 +34,9 @@ const productValidation = [
   body("price")
     .notEmpty().withMessage("Price is required")
     .isFloat({ gt: 0 }).withMessage("Price must be greater than 0"),
+  body("stock")
+    .notEmpty().withMessage("stock is required")
+    .isFloat({ gt: 0 }).withMessage("stock must be greater than 0"),
   body("discount")
     .optional()
     .isFloat({ min: 0, max: 100 })

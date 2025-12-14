@@ -1,53 +1,32 @@
-// import React, { useState } from 'react'
-// import { Link } from 'react-router-dom'
-// import Skeleton from "react-loading-skeleton";
-// import 'react-loading-skeleton/dist/skeleton.css'
-
-
-// const ProductCard = ({ title, thumbnail, price, discount,description,id }) => {
-//     const [isLoading, setIsLoading] = useState(true)
-//     return (
-//         <div className='rounded-md  shadow-md drop-shadow-2xl shadow-black/50 h-max min-h-75 w-50 px-5 py-2 bg-white/20 backdrop-blur-3xl overflow-hidden'>
-//            { !isLoading?
-//            <img className='w-full h-1/2 object-center object-cover rounded-md'
-//                 src={thumbnail}
-//                 loading='lazy'
-//                 onLoad={()=>{setIsLoading(false)}}
-//                 alt="Product Thumbnail" />:
-//                 <div className='w-full h-25 rounded-2xl overflow-hidden bg-black/30'>
-//                 <Skeleton width={'100%'} height={100}/>
-//                 </div>
-//                 }
-//             <h1 className='font-bold text-xl tracking-tight text-blue-950'>{title}</h1>
-//             <div className='flex items-center justify-around text-xl h-max'>
-//                 <h1 className='text-yellow-500 font-semibold'><span className='line-through text-red-600'>₹{price}</span> {price*(100-discount)/100}</h1>
-//                 <h1 className='text-red-500 font-semibold'>{discount}%</h1>
-//             </div>
-//             <p className='text-xs text-gray-700 tracking-tighter overflow-hidden w-full h-12.5'>{description}</p>
-//             <div className='flex items-center justify-center rounded-full overflow-hidden bg-gray-800 text-white'>
-//                 <Link to={`/product/edit/${id}`} className='w-1/3 mx-0.5 p-2 bg-blue-500 hover:bg-blue-600'>Edit</Link>
-//                 <Link to={`/product/delte/${id}`} className='w-1/3 mx-0.5 p-2 bg-red-500 hover:bg-red-700'>Delete</Link>
-//                 <Link to={`/product/more/${id}`} className='w-1/3 mx-0.5 p-2 bg-gray-500 hover:bg-gray-600'>More</Link>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default ProductCard
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import axiosInstance from "../utils/axiosInstance";
 
-const ProductCard = ({ title, thumbnail, price, discount, description, id }) => {
+const ProductCard = ({ title, thumbnail, price, discount, description, id, stock }) => {
   const [isLoading, setIsLoading] = useState(true);
-setTimeout(() => {
+  setTimeout(() => {
     setIsLoading(false)
-}, 3000);
-
+  }, 3000);
+  const deleteHandler = async () => {
+    try {
+      const result = await axiosInstance.get(`/product/delete/${id}`)
+      console.log(result)
+    } catch (error) {
+      const data = error?.response?.data;
+      console.log(data)
+      if (error.status === 401) {
+        alert("You are not the admin.");
+      }
+      if (data?.redirectTo) {
+        return navigate(data.redirectTo);
+      }
+    }
+  }
   return (
-    <div className="rounded-md self-center shadow-md drop-shadow-2xl shadow-black/50 h-max mx-auto min-h-75 w-full max-w-md  px-5 py-2 bg-white backdrop-blur-3xl overflow-hidden">
+    <div className="rounded-md self-center shadow-md drop-shadow-2xl shadow-black/50 h-max mx-auto min-h-75 w-full sm:max-w-md max-w-100  px-5 py-2 bg-white backdrop-blur-3xl overflow-hidden">
       {/* 🖼️ Image */}
       <div className="relative w-full h-40 rounded-md overflow-hidden">
         {isLoading && <Skeleton width="100%" height={160} />}
@@ -57,9 +36,8 @@ setTimeout(() => {
           loading="lazy"
           onLoad={() => setIsLoading(false)}
           onError={(e) => console.error("❌ Image failed to load:", e)}
-          className={`absolute top-0 left-0 w-full h-full object-cover rounded-md transition-opacity duration-300 ${
-            isLoading ? "opacity-0" : "opacity-100"
-          }`}
+          className={`absolute top-0 left-0 w-full h-full object-cover rounded-md transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"
+            }`}
         />
       </div>
 
@@ -72,16 +50,20 @@ setTimeout(() => {
         </h1>
       )}
 
-      {/* 💰 Price + Discount */}
+      {/* 💰 Price + Discount + stock*/}
       {isLoading ? (
         <Skeleton height={25} width="100%" className="mt-2" />
       ) : (
         <div className="flex items-center justify-around text-xl h-max mt-1">
           <h1 className="text-yellow-500 font-semibold">
-            <span className="line-through text-red-600">₹{price}</span>{" "}
-            {price * (100 - discount) / 100}
+            {discount > 0 ? <><span className="line-through text-red-600 text-sm text-center">₹{price}</span> <br /></> : ''}
+
+            ₹{price * (100 - discount) / 100}
           </h1>
-          <h1 className="text-white font-semibold bg-red-500 rounded-[calc(50%+5px)] p-2  min-h-max">{discount}%</h1>
+          <p className="text-sm font-semibold text-gray-100 bg-gray-600 tracking-tighter overflow-hidden py-2 px-3 w-max h-max rounded-lg mt-2">
+            {stock} left
+          </p>
+          {discount > 0 ? <h1 className="text-white font-semibold bg-red-500 rounded-[calc(50%+5px)] p-2  min-h-max">{discount}%</h1> : ""}
         </div>
       )}
 
@@ -93,7 +75,7 @@ setTimeout(() => {
           <Skeleton height={15} width="100%" />
         </div>
       ) : (
-        <p className="text-xs text-gray-700 tracking-tighter overflow-hidden w-full h-12.5 mt-2">
+        <p className="text-xs font-semibold text-gray-700 tracking-tighter overflow-hidden w-full h-12.5 mt-2">
           {description}
         </p>
       )}
@@ -109,12 +91,12 @@ setTimeout(() => {
           >
             Edit
           </Link>
-          <Link
-            to={`/product/delete/${id}`}
+          <button
+            onClick={deleteHandler}
             className="w-1/3 mx-0.5 p-2 bg-red-500 hover:bg-red-700 text-center"
           >
             Delete
-          </Link>
+          </button>
           <Link
             to={`/product/more/${id}`}
             className="w-1/3 mx-0.5 p-2 bg-gray-500 hover:bg-gray-600 text-center"
@@ -128,4 +110,3 @@ setTimeout(() => {
 };
 
 export default ProductCard;
-

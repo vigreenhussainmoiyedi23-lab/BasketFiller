@@ -8,6 +8,7 @@ const ProductEdit = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
+    const [stock, setStock] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [product, setProduct] = useState(null);
     const navigate=useNavigate()
@@ -31,6 +32,7 @@ const ProductEdit = () => {
         formData.append("description", description || product?.description);
         formData.append("price", price || product?.price);
         formData.append("discount", discount || product?.discount);
+        formData.append("stock", stock || product?.stock);
         const result = await axiosInstance.post(`/product/edit/${id}`, formData);
         window.history.back();
     } catch (error) {
@@ -50,9 +52,14 @@ const ProductEdit = () => {
             <div className='bg-gray-100 flex items-center justify-center text-gray-900 p-4 rounded shadow-md w-screen h-screen'>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-full max-w-xl bg-white p-6 rounded shadow-md'>
                     <h1 className='text-blue-500 text-center font-bold  sm:text-3xl text-2xl md:text-4xl'>Update Product</h1>
+                    <p className=''>Title</p>
                     <Input name="title" placeholder="Enter the new Title" value={title || product?.title} onChange={(e) => { setTitle(e.target.value) }} />
-                    <Input name="price" placeholder="Enter the new Price" value={price || product?.price} onChange={(e) => { setPrice(e.target.value) }} />
-                    <Input name="discount" placeholder="Enter the new Discount" value={discount || product?.discount} onChange={(e) => { setDiscount(e.target.value) }} />
+                    <p className=''>stock</p>
+                    <Input name="stock" type='Number' placeholder="Enter the new Stock" value={stock || product?.stock} onChange={(e) => { setStock(e.target.value) }} />
+                    <p className=''>price</p>
+                    <Input name="price" type='Number' placeholder="Enter the new Price" value={price || product?.price} onChange={(e) => { setPrice(e.target.value) }} />
+                    <p className=''>discount</p>
+                    <Input name="discount" type='Number' placeholder="Enter the new Discount" value={discount || product?.discount} onChange={(e) => { setDiscount(e.target.value) }} />
                     <textarea name="description" id="description"
                         className="resize-none w-full max-w-xl h-30 max-h-50 rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-800 placeholder-gray-400 text-base sm:text-lg shadow-sm transition-all duration-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-300 focus:outline-none ${className}"
                         placeholder='Enter the new description'
