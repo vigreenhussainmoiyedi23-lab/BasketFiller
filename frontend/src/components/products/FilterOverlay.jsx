@@ -15,6 +15,16 @@ const FilterOverlay = ({ tempFilters, setTempFilters }) => {
             priceRange,
         })
     }
+    const ResetHandler = () => {
+        setTempFilters({
+            category: '',
+            sortBy:'',
+            priceRange:[0,Infinity],
+        })
+        setSelected('')
+        setSortBy('')
+        setPriceRange([0,Infinity])
+    }
     return (
         <div className='absolute z-10 left-0 top-[20vh] w-[50%] min-w-sm max-w-lg h-[80vh] bg-gray-800/90 backdrop-blur-2xl sm:p-4 p-2 rounded-2xl flex flex-col items-start justify-start flex-wrap gap-4 overflow-x-scroll'>
             <h2 className='text-white text-3xl font-bold'>Filters</h2>
@@ -80,6 +90,9 @@ const FilterOverlay = ({ tempFilters, setTempFilters }) => {
             <button
                 onClick={handleSubmit}
                 className='w-full max-w-sm sm:scale-100 scale-80 bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-600 active:scale-75 rounded-full py-2 px-3'>Apply Filters</button>
+            <button
+                onClick={ResetHandler}
+                className='w-full max-w-sm sm:scale-100 scale-80 bg-yellow-400 hover:bg-green-500 active:bg-yellow-600 active:scale-75 rounded-full py-2 px-3'>Reset Filters</button>
         </div>
     )
 }

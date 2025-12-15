@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
+import { DeleteHandler } from "../../../backend/src/controllers/product.controllers";
 
 const ProductMore = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-
+  const deleteHandler = async () => {
+    try {
+      const result = await axiosInstance.get(`/product/delete/${id}`)
+      console.log(result)
+    } catch (error) {
+      const data = error?.response?.data;
+      console.log(data)
+      if (error.status === 401) {
+        alert("You are not the admin.");
+      }
+      if (data?.redirectTo) {
+        return navigate(data.redirectTo);
+      }
+    }
+  }
   const GetProductDetails = async () => {
     try {
       const result = await axiosInstance.get(`/product/more/${id}`);
@@ -55,10 +70,14 @@ const ProductMore = () => {
 
         {/* 🧾 Product Details */}
         <div className="border-t border-gray-200 pt-6">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-3">
+          <h1 className="md:text-3xl sm:text-2xl text-xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-gray-900 mb-3 capitalize ">
             {product.title}
           </h1>
-          <p className="text-gray-600 leading-relaxed mb-6 tracking-tighter">
+          <div className="flex items-center justify-around">
+            <div className="w-max min-w-20 h-max p-3 bg-slate-800 text-gray-300 text-xl font-bold rounded-4xl">Stock Left <span>{product.stock}</span></div>
+            <div className="w-max min-w-20 h-max p-3 bg-gray-800 text-gray-300 text-xl font-bold rounded-4xl">Categoury <span>{product.categoury}</span></div>
+          </div>
+          <p className="text-gray-600 leading-relaxed mb-6 sm:text-xl lg:text-2xl text-sm tracking-tighter">
             {product.description}
           </p>
 
@@ -87,7 +106,7 @@ const ProductMore = () => {
             Edit
           </Link>
           <Link
-            to={`/product/delete/${id}`}
+            onClick={deleteHandler}
             className="w-1/2 mx-0.5 p-2 bg-red-500 hover:bg-red-700 text-center"
           >
             Delete

@@ -1,14 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axiosInstance from "../../utils/AxiosInstance";
+import { useState } from "react";
 
-const ProductCard = ({ title, description, price, discount, thumbnail,id,stock }) => {
-const AddToCart=async () => {
-  try {
-    axiosInstance.post('/cart/add',{id})
-  } catch (error) {
-    
-  }  
-}
+const ProductCard = ({ title, description, price, discount, thumbnail, id, stock }) => {
+  const [inCart, setInCart] = useState(null)
+  const IsProductInCart=async () => {
+      try {
+      const result =await axiosInstance.get(`/cart/${id}`)
+      if (result.data.inCart) setInCart(result.data.inCart)
+    } catch (error) {
+      console.error("Error rendering logic for cart:", error);
+    }
+  }
+  const AddToCart = async () => {
+    try {
+      const result =await axiosInstance.post(`/cart/add/${id}`)
+      if (result.data) setInCart(true)
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  }
+  const RemoveFromCart = async () => {
+    try {
+      const result =await axiosInstance.post(`/cart/remove/${id}`)
+      if (result.data) setInCart(false)
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+    }
+  }
+  useEffect(() => {
+    IsProductInCart()
+  }, [inCart])
+  
   return (
     <div className="bg-zinc-800 rounded-2xl border border-zinc-700 shadow-lg overflow-hidden hover:-translate-y-1 hover:shadow-cyan-500/20 transition-all duration-300">
       {/* 🖼️ Product Image */}
@@ -36,7 +59,7 @@ const AddToCart=async () => {
             </span>
           </div>
           <span className="text-white rounded-4xl whitespace-nowrap bg-gray-700 py-2 px-3 font-bold text-sm">
-          {stock} left
+            {stock} left
           </span>
           <span className="text-red-400 font-medium text-sm">
             {discount}% OFF
@@ -44,11 +67,16 @@ const AddToCart=async () => {
         </div>
 
         {/* 🔘 Button */}
-        <button 
-        onClick={() => alert(`Added ${title} to cart!`)}
-        className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2 rounded-xl transition-all duration-200">
-          Add to Cart
-        </button>
+        {!inCart ?
+          <button
+            onClick={AddToCart}
+            className="w-full bg-cyan-600 hover:bg-cyan-500 scale-75 text-white font-semibold py-2 rounded-xl transition-all duration-200">
+            Add to Cart
+          </button> : <button
+            onClick={RemoveFromCart}
+            className="w-full bg-red-500 hover:bg-red-600 scale-75 tracking-tighter text-white font-semibold py-2 rounded-xl transition-all duration-200">
+            Remove from Cart
+          </button>}
       </div>
     </div>
   );

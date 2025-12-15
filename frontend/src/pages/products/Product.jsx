@@ -5,6 +5,7 @@ import FilterBar from '../../components/utils/FilterBar'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import axiosInstance from '../../utils/AxiosInstance'
+import Footer from '../../components/Home/Footer'
 
 const Product = () => {
   const [filters, setFilters] = useState({
@@ -32,6 +33,7 @@ const Product = () => {
       <Navbar />
       <FilterBar setFilters={setFilters} filters={filters} />
       <ProductContainer products={products} setProducts={setProducts} />
+      <Footer/>
     </div>
   )
 }

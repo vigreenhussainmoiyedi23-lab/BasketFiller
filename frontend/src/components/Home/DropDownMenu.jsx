@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const DropDownMenu = ({ logoutHandler }) => {
     const [dropDown, setDropDown] = useState(false)
     return (
-        <Menu as="div" className="relative">
+        <Menu as="div" className="relative md:hidden block">
 
             <MenuButton className='flex items-center justify-center' onClick={() => { setDropDown(prev => !prev) }}>
                 {dropDown ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-9">
@@ -23,17 +23,17 @@ const DropDownMenu = ({ logoutHandler }) => {
             {/* --- Animation Added Here --- */}
             <Transition
                 as={Fragment}
-                enter="transition ease-out duration-200"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="transition ease-in duration-150"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
+                enter="transition ease-out duration-600"
+                enterFrom="opacity-0 scale-95 left-[-100%"
+                enterTo="opacity-100 scale-100 left-0"
+                leave="transition ease-in duration-150 "
+                leaveFrom="opacity-100 scale-100 left-0"
+                leaveTo="opacity-0 scale-95 left-[-100%]"
             >
                 <MenuItems
                     anchor="bottom"
                    
-                    className="outline-none text-white focus:ring-0 gap-3 sm:text-3xl text-2xl text-center bg-black/5 backdrop-blur-3xl flex flex-col h-screen w-screen justify-center items-center"
+                    className="outline-none text-white absolute focus:ring-0 gap-3 sm:text-3xl text-2xl text-center bg-black/5 backdrop-blur-3xl flex flex-col h-screen w-[max(50%,320px)] top-0 left-0 justify-center items-center"
                 >
                     <MenuItem>
                         <Link

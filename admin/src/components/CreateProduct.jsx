@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Input from "./Input";
 import axiosInstance from "../utils/axiosInstance";
+import { useEffect } from "react";
 
 
 
@@ -14,8 +15,22 @@ const CreateProduct = () => {
   const [price, setPrice] = useState('');
   const [discount, setDiscount] = useState(0);
   const [stock, setStock] = useState('');
+  const [categoury, setCategoury] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
-
+  const [categouries, setCategouries] = useState([
+    'electronics',
+    'fashion',
+    'home-appliances',
+    'books',
+    'groceries',
+    'beauty-products',
+    'toys',
+    'sports',
+    'automotive',
+    'furniture',
+    'jewelry',
+    'Other',
+  ])
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -26,6 +41,7 @@ const CreateProduct = () => {
     fd.append("discount", discount); // ✅ fixed misplaced parenthesis
     fd.append("thumbnail", thumbnail);
     fd.append("stock", stock);
+    fd.append("categoury", categoury);
 
     // ✅ If multiple photos are uploaded
     if (photos && photos.length > 0) {
@@ -35,28 +51,29 @@ const CreateProduct = () => {
     }
 
     try {
-      const result = await axiosInstance.post("/product/create", fd,{
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
-});
+      const result = await axiosInstance.post("/product/create", fd, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       setDescription('')
       setTitle('')
       setPrice('')
       setDiscount(0)
       setStock('')
+      setCategoury('')
       setPhotos([])
       setThumbnail(null)
     } catch (error) {
       const data = error?.response?.data;
-      
+
       if (error.status === 401) {
         return alert("You are not the admin.");
       }
       if (data?.redirectTo) {
         navigate(data.redirectTo);
       }
-         if (data?.errors?.[0]?.msg) {
+      if (data?.errors?.[0]?.msg) {
         setErrorMessage(data.errors[0].msg);
       } else if (data?.message) {
         setErrorMessage(data.message);
@@ -65,7 +82,6 @@ const CreateProduct = () => {
       }
     }
   };
-
 
   return (
     <div className="w-full min-h-screen flex justify-center items-center bg-gray-100 py-10">
@@ -118,6 +134,16 @@ const CreateProduct = () => {
               onChange={(e) => setPrice(e.target.value)}
               placeholder="Enter price"
             />
+          </div>
+          <div>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Category</label>
+            <select
+            className="border-2 w-[95%] outline-none"
+            name="categoury" id="categoury" onChange={(e) => { setCategoury(e.target.value) }} value={categoury}>
+              <option value="">Select a Category</option>
+              {!categouries.length == 0 ? categouries.map(categoury => { return <option value={categoury}>{categoury}</option> }) : ''}
+            </select>
           </div>
 
           {/* Discount + stock*/}
@@ -189,7 +215,7 @@ const CreateProduct = () => {
           </div>
 
           {/* Submit Button */}
-        {errorMessage ? <p className="text-red-500 text-sm text-center w-full">⚠️ {errorMessage}</p> : ''}
+          {errorMessage ? <p className="text-red-500 text-sm text-center w-full">⚠️ {errorMessage}</p> : ''}
 
           <button
             type="submit"

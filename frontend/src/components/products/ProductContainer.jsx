@@ -5,7 +5,7 @@ const ProductContainer = ({products}) => {
 
 
     if (!products || products.length === 0) {
-        return <p className='text-4xl font-bold animate-pulse'>loading products</p>
+        return <p className='text-4xl font-bold animate-pulse'>No products Found</p>
     }
     return (
         <div className='h-max w-full gap-2 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 p-4'>

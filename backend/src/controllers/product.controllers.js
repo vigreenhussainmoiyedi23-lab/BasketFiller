@@ -28,11 +28,11 @@ async function ProductMoreHandler(req, res) {
 
 async function FilterHandler(req, res) {
     try {
-        const { priceRange, sort, category, search, page } = req.body;
+        const { priceRange, sort, category, search, page:BodyValueOfPage } = req.body;
         const filter = {};
-        if (!page || page <= 0) page = 1
+        let page
+        if (!BodyValueOfPage || BodyValueOfPage <= 0) page = 1
         if (category) filter.category = category;
-
         if (priceRange) {
             const [minPrice, maxPrice] = priceRange;
             filter.price = {};
@@ -56,6 +56,7 @@ async function FilterHandler(req, res) {
             query = query.skip((page - 1) * 12).limit(12)
         }
         const products = await query;
+       
         res.status(200).json({ message: 'Filtered results', count: products.length, products });
     } catch (error) {
         res.status(500).json({ message: 'Error filtering products', error: error.message });
@@ -108,7 +109,7 @@ async function CreateHandler(req, res) {
     // req.files will be an object containing arrays for each field
     const thumbnailFile = req.files['thumbnail'] ? req.files['thumbnail'][0] : null;
     const productImagesFiles = req.files['productImages'] || [];
-    const { title, stock, price, discount, description } = req.body
+    const { title, stock, price, discount, description,categoury } = req.body
 
     if (!thumbnailFile || productImagesFiles.length === 0) {
         return res.status(400).json({ message: 'Both thumbnail and product images are required.' });
@@ -142,6 +143,7 @@ async function CreateHandler(req, res) {
             price,
             stock,
             discount,
+            categoury,
             thumbnail: thumbnailUrl,
             photos: imageUrls
         })
