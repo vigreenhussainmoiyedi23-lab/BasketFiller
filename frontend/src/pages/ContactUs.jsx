@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from "../utils/AxiosInstance";
-import Navbar from "../components/Home/Navbar";
+import Navbar from "../components/utils/Navbar";
 import Footer from "../components/Home/Footer";
 
 const ContactUs = () => {

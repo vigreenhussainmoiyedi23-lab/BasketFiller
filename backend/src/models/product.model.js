@@ -7,7 +7,7 @@ const productSchema = mongoose.Schema({
     thumbnail: String,
     photos: [{ type: String }],
     price: Number,
-    stock:{type:Number,default:0},
+    stock: { type: Number, default: 0 },
     discount: {
         type: Number,
         min: 0,
@@ -26,7 +26,27 @@ const productSchema = mongoose.Schema({
             type: Date,
             default: Date.now
         }
-    }]
+    }],
+    categoury: [
+        {
+            type: String,
+            enum: [
+                'electronics',
+                'fashion',
+                'home-appliances',
+                'books',
+                'groceries',
+                'beauty-products',
+                'toys',
+                'sports',
+                'automotive',
+                'furniture',
+                'jewelry',
+                'Other',
+            ],
+            default: 'Other',
+        }
+    ]
 }, {
     toJSON: { virtuals: true }  // 👈 important
 })

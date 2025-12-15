@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import axiosInstance from '../utils/AxiosInstance'
 import { useNavigate } from 'react-router-dom'
-import Navbar from '../components/Home/Navbar'
+import Navbar from '../components/utils/Navbar'
 import Footer from '../components/Home/Footer'
 import Hero from '../components/Home/hero'
 import AboutUs from '../components/Home/aboutUs'

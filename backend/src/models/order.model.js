@@ -1,25 +1,24 @@
 const mongoose = require('mongoose')
 
 
-const productSchema = mongoose.Schema({
+const orderSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
-    totalPrice: Number,
+    address: String,
     products: [
         {
             productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
             quantity: Number,
             price: Number, // final price after discount
+            totalPrice: Number,//price after price*quantity
         }
     ],
-    totalAmount: Number,       // sum of all products’ prices * quantities
+    totalAmount: Number,// sum of all  totalPrice
     status: { type: String, default: "pending" },
     createdAt: { type: Date, default: Date.now },
     paymentOption:{type:String,enum:['COD','ONLINE'], default:'COD'},
 }, {
     toJSON: { virtuals: true }  // 👈 important
 })
+const orderModel = mongoose.model('order', orderSchema)
 
-
-const productModel = mongoose.model('product', productSchema)
-
-module.exports = productModel
+module.exports = orderModel

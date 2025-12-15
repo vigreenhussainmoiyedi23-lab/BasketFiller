@@ -7,11 +7,11 @@ const { productValidation, validate } = require('../utils/express-validator')
 const productUploadMiddleware = require('../middlewares/ProductUpload')
 const { isadmin } = require('../middlewares/AdminMiddleware')
 const { ProductIndexHandler, ProductMoreHandler, CreateHandler, EditHandler, DeleteHandler, FilterHandler } = require('../controllers/product.controllers')
-
+// /api/product
 // Common Routes
 Router.get('/', ProductIndexHandler)
 Router.get('/more/:id', ProductMoreHandler)
-Router.get('/filter', FilterHandler);
+Router.post('/filter', FilterHandler);
 
 // Admin only routes Protected routes
 Router.post('/create', isadmin, productUploadMiddleware, productValidation, validate, CreateHandler);

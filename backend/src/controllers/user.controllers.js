@@ -30,12 +30,12 @@ async function ProfileEditHandler(req, res) {
             folder: '/profilePics',
         });
         const user = await UserModel.findOne({ _id: req.params.id }).lean()
-        await imagekit.deleteFile(user?.fileId)
+        if(user.fileId)await imagekit.deleteFile(user.fileId)
         // updating user info in DB
         await UserModel.findByIdAndUpdate(req.params.id, {
             username,
             profilePic: url,
-            fileId
+            fileId:fileId
         });
         res.status(200).json({
             message: "Profile updated successfully",
@@ -49,7 +49,6 @@ async function ProfileEditHandler(req, res) {
     }
 }
 async function ProfileSecurityHandler(req, res) {
-    console.log(req.body)
     const { oldPassword, newPassword } = req.body
     const user = await UserModel.findOne({ _id: req.params.id })
     const result = await comparePassword(oldPassword, user.password)

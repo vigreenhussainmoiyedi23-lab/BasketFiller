@@ -14,6 +14,7 @@ const authRoutes=require('./routes/auth.routes')
 const userRoutes=require('./routes/user.routes')
 const adminRoutes=require('./routes/admin.routes')
 const productRoutes=require('./routes/product.routes')
+const cartRoutes=require('./routes/cart.routes')
 //_______Middlewares_______
 app.use(express.json())
 app.use(cookieParser())
@@ -25,5 +26,6 @@ app.use('/api/auth',authRoutes)
 app.use('/api/user',UserCanAcces,userRoutes)
 app.use('/api/admin',adminRoutes)
 app.use('/api/product',productRoutes)
+app.use('/api/cart',cartRoutes)
 
 module.exports=app

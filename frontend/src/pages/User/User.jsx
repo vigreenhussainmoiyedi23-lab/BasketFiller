@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../../utils/AxiosInstance'
 import { Link, useNavigate } from 'react-router-dom'
-import Navbar from '../../components/Home/Navbar'
+import Navbar from '../../components/utils/Navbar'
 import Footer from '../../components/Home/Footer'
 
 const User = () => {

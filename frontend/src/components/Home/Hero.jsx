@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Hero = () => {
   return (
@@ -9,15 +10,15 @@ const Hero = () => {
         <h1 className="text-gray-100 
                        text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
                        font-extrabold leading-tight">
-          Everything You Need <br />
+          Everything You Need, 
           All in One <span className="text-purple-400 text-5xl sm:text-6xl md:text-7xl font-extrabold">Basket</span>
         </h1>
 
-        <button className="bg-blue-500 hover:bg-blue-600 transition-all
+        <Link to='/products' className="bg-blue-500 hover:bg-blue-600 transition-all
                            text-xl sm:text-2xl font-bold py-3 px-8 
                            text-gray-100 mt-6 rounded-full shadow-lg">
           Shop Now
-        </button>
+        </Link>
       </div>
 
       {/* RIGHT SECTION (IMAGE) */}

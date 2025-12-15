@@ -1,11 +1,12 @@
 // models
 const productModel = require('../models/product.model')
 // configs
-const imagekit = require("../config/Imagekit")
+const imagekit = require("../config/Imagekit");
+
 
 
 async function ProductIndexHandler(req, res) {
-// inedx means /api/products
+    // inedx means /api/products
     try {
         const products = await productModel.find().lean()
         res.status(200).json({ message: "products are here", products })
@@ -27,19 +28,35 @@ async function ProductMoreHandler(req, res) {
 
 async function FilterHandler(req, res) {
     try {
-        const { minPrice, maxPrice, category, search } = req.query;
-
+        const { priceRange, sort, category, search, page } = req.body;
         const filter = {};
+        if (!page || page <= 0) page = 1
         if (category) filter.category = category;
-        if (minPrice || maxPrice) {
-            filter.price = {};
-            if (minPrice) filter.price.$gte = Number(minPrice);
-            if (maxPrice) filter.price.$lte = Number(maxPrice);
-        }
-        if (search) filter.title = { $regex: search, $options: 'i' };
 
-        const products = await productModel.find(filter);
-        res.json({ message: 'Filtered results', count: products.length, products });
+        if (priceRange) {
+            const [minPrice, maxPrice] = priceRange;
+            filter.price = {};
+            if (minPrice !== null && minPrice !== undefined)
+                filter.price.$gte = Number(minPrice);
+            if (maxPrice !== null && maxPrice !== undefined)
+                filter.price.$lte = Number(maxPrice);
+        }
+
+        if (search) filter.title = { $regex: search, $options: "i" };
+
+        // ✅ Build the query first
+        let query = productModel.find(filter);
+
+        // ✅ Apply sorting after building the query
+        if (sort) {
+            const sortOrder = sort === "lowToHigh" ? 1 : -1;
+            query = query.sort({ price: sortOrder });
+        }
+        if (page) {
+            query = query.skip((page - 1) * 12).limit(12)
+        }
+        const products = await query;
+        res.status(200).json({ message: 'Filtered results', count: products.length, products });
     } catch (error) {
         res.status(500).json({ message: 'Error filtering products', error: error.message });
     }
@@ -60,7 +77,7 @@ async function DeleteHandler(req, res) {
 
 async function EditHandler(req, res) {
     try {
-        const { title,stock, price, discount, description } = req.body;
+        const { title, stock, price, discount, description } = req.body;
 
         // Find product by ID
         const product = await productModel.findOne({ _id: req.params.id });
@@ -91,7 +108,7 @@ async function CreateHandler(req, res) {
     // req.files will be an object containing arrays for each field
     const thumbnailFile = req.files['thumbnail'] ? req.files['thumbnail'][0] : null;
     const productImagesFiles = req.files['productImages'] || [];
-    const { title,stock, price, discount, description } = req.body
+    const { title, stock, price, discount, description } = req.body
 
     if (!thumbnailFile || productImagesFiles.length === 0) {
         return res.status(400).json({ message: 'Both thumbnail and product images are required.' });
