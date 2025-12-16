@@ -8,15 +8,18 @@ async function UserCanAuthenticate(req, res, next) {
 }
 
 async function UserCanAcces(req, res, next) {
-    const token = req.cookies.token
-    if (!token) return res.status(401).json({ success: false, redirectTo: '/login', message: 'Unauthorized Access' })
-    const decoded = VerifyToken(token)
-    if (!decoded) return res.status(401).json({ success: false, redirectTo: '/login', message: 'Unauthorized Access' })
-    const user = await FindUser({ _id: decoded.id })
-    if (!user) return req.status(500).json({ message: "Something Went Wrong" })
-        
-    req.user = user
-    next()
+    try {
+        const token = req.cookies.token
+        if (!token) return res.status(401).json({ success: false, redirectTo: '/login', message: 'Unauthorized Access' })
+        const decoded = VerifyToken(token)
+        if (!decoded) return res.status(401).json({ success: false, redirectTo: '/login', message: 'Unauthorized Access' })
+        const user = await FindUser({ _id: decoded.id })
+        if (!user) return res.status(500).json({ message: "User Not Found", redirectTo: '/login' })
+        req.user = user
+        next()
+    } catch (error) {
+
+    }
 }
 
 module.exports = { UserCanAcces, UserCanAuthenticate }

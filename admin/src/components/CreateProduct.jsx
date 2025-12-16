@@ -15,7 +15,7 @@ const CreateProduct = () => {
   const [price, setPrice] = useState('');
   const [discount, setDiscount] = useState(0);
   const [stock, setStock] = useState('');
-  const [categoury, setCategoury] = useState('')
+  const [categoury, setCategoury] = useState('Other')
   const [errorMessage, setErrorMessage] = useState(null)
   const [categouries, setCategouries] = useState([
     'electronics',
@@ -141,7 +141,6 @@ const CreateProduct = () => {
             <select
             className="border-2 w-[95%] outline-none"
             name="categoury" id="categoury" onChange={(e) => { setCategoury(e.target.value) }} value={categoury}>
-              <option value="">Select a Category</option>
               {!categouries.length == 0 ? categouries.map(categoury => { return <option value={categoury}>{categoury}</option> }) : ''}
             </select>
           </div>

@@ -7,3 +7,18 @@ body,#root {
   position: relative;
   box-sizing: border-box;
 }
+
+
+@keyframes infiniteLinearTextTravel {
+ 0%{
+  left:200%
+ }
+ 100%{
+  left:-200%
+ }
+}
+
+.animate-linearLoop{
+  animation: infiniteLinearTextTravel 20s  linear  infinite  forwards;
+  
+}

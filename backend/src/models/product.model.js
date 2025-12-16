@@ -27,26 +27,25 @@ const productSchema = mongoose.Schema({
             default: Date.now
         }
     }],
-    categoury: [
-        {
-            type: String,
-            enum: [
-                'electronics',
-                'fashion',
-                'home-appliances',
-                'books',
-                'groceries',
-                'beauty-products',
-                'toys',
-                'sports',
-                'automotive',
-                'furniture',
-                'jewelry',
-                'Other',
-            ],
-            default: 'Other',
-        }
-    ]
+    categoury:
+    {
+        type: String,
+        enum: [
+            'electronics',
+            'fashion',
+            'home-appliances',
+            'books',
+            'groceries',
+            'beauty-products',
+            'toys',
+            'sports',
+            'automotive',
+            'furniture',
+            'jewelry',
+            'Other',
+        ],
+        default: 'Other',
+    }
 }, {
     toJSON: { virtuals: true }  // 👈 important
 })

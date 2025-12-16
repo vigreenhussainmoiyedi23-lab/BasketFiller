@@ -28,35 +28,77 @@ async function ProductMoreHandler(req, res) {
 
 async function FilterHandler(req, res) {
     try {
-        const { priceRange, sort, category, search, page:BodyValueOfPage } = req.body;
-        const filter = {};
-        let page
-        if (!BodyValueOfPage || BodyValueOfPage <= 0) page = 1
-        if (category) filter.category = category;
+        const { priceRange, sort, category, search, page } = req.body;
+        const pipeline = []
+        let limit = 12;
+        let skip = 0
+        page ? skip = (Number(page) - 1) * limit : skip = 0;
+        if (category) {
+            pipeline.push({
+                $match: {
+                    categoury: category
+                }
+            })
+        }
+        if (search) {
+            pipeline.push({
+                $match: {
+                    title: { $regex: search, $options: 'i' }
+                }
+            })
+        }
+
+        pipeline.push({
+            $addFields: {
+                finalPrice: {
+                    $multiply: ["$price",
+                        {
+                            $divide: [{$subtract: [100, "$discount"]} , 100]
+                        }]
+                }
+            }
+        })
+
         if (priceRange) {
-            const [minPrice, maxPrice] = priceRange;
-            filter.price = {};
-            if (minPrice !== null && minPrice !== undefined)
-                filter.price.$gte = Number(minPrice);
-            if (maxPrice !== null && maxPrice !== undefined)
-                filter.price.$lte = Number(maxPrice);
+            let [min, max] = priceRange
+            if (!max) max = 100000;
+            if (!min) min = 0;
+            pipeline.push({
+                $match: {
+                    finalPrice: {
+                        $gte: min,
+                        $lte: max,
+                    }
+                }
+            })
         }
 
-        if (search) filter.title = { $regex: search, $options: "i" };
-
-        // ✅ Build the query first
-        let query = productModel.find(filter);
-
-        // ✅ Apply sorting after building the query
         if (sort) {
-            const sortOrder = sort === "lowToHigh" ? 1 : -1;
-            query = query.sort({ price: sortOrder });
+            if (sort === "lowToHigh") {
+                pipeline.push({
+                    $sort: {
+                        finalPrice: 1
+                    }
+                })
+            } else {
+                pipeline.push({
+                    $sort: {
+                        finalPrice: -1
+                    }
+                })
+            }
         }
-        if (page) {
-            query = query.skip((page - 1) * 12).limit(12)
-        }
-        const products = await query;
-       
+
+        pipeline.push({
+            $skip: skip,
+           
+        })
+        pipeline.push({
+          $limit: limit
+        })
+        console.log(pipeline)
+
+        const products = await productModel.aggregate(pipeline)
         res.status(200).json({ message: 'Filtered results', count: products.length, products });
     } catch (error) {
         res.status(500).json({ message: 'Error filtering products', error: error.message });
@@ -78,7 +120,7 @@ async function DeleteHandler(req, res) {
 
 async function EditHandler(req, res) {
     try {
-        const { title, stock, price, discount, description } = req.body;
+        const { title, stock, price, discount, description, categoury } = req.body;
 
         // Find product by ID
         const product = await productModel.findOne({ _id: req.params.id });
@@ -94,6 +136,7 @@ async function EditHandler(req, res) {
         if (discount) product.discount = discount;
         if (description) product.description = description;
         if (stock) product.stock = stock;
+        if (categoury) product.categoury = categoury;
 
         // Save updated product
         await product.save();
@@ -109,7 +152,7 @@ async function CreateHandler(req, res) {
     // req.files will be an object containing arrays for each field
     const thumbnailFile = req.files['thumbnail'] ? req.files['thumbnail'][0] : null;
     const productImagesFiles = req.files['productImages'] || [];
-    const { title, stock, price, discount, description,categoury } = req.body
+    const { title, stock, price, discount, description, categoury } = req.body
 
     if (!thumbnailFile || productImagesFiles.length === 0) {
         return res.status(400).json({ message: 'Both thumbnail and product images are required.' });

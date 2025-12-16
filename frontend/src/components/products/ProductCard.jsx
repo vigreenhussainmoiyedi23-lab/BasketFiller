@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import axiosInstance from "../../utils/AxiosInstance";
 import { useState } from "react";
-
-const ProductCard = ({ title, description, price, discount, thumbnail, id, stock }) => {
+import { useNavigate } from "react-router-dom"
+const ProductCard = ({ title, description, price, discount, finalPrice, thumbnail, id, stock }) => {
   const [inCart, setInCart] = useState(null)
-  const IsProductInCart=async () => {
-      try {
-      const result =await axiosInstance.get(`/cart/${id}`)
+  const navigate = useNavigate()
+  const IsProductInCart = async () => {
+    try {
+      const result = await axiosInstance.get(`/cart/${id}`)
       if (result.data.inCart) setInCart(result.data.inCart)
     } catch (error) {
       console.error("Error rendering logic for cart:", error);
@@ -14,24 +15,30 @@ const ProductCard = ({ title, description, price, discount, thumbnail, id, stock
   }
   const AddToCart = async () => {
     try {
-      const result =await axiosInstance.post(`/cart/add/${id}`)
+      const result = await axiosInstance.post(`/cart/add/${id}`)
       if (result.data) setInCart(true)
     } catch (error) {
       console.error("Error adding to cart:", error);
+      if (error.response.data.redirectTo) {
+        navigate(error.response.data.redirectTo)
+      }
     }
   }
   const RemoveFromCart = async () => {
     try {
-      const result =await axiosInstance.post(`/cart/remove/${id}`)
+      const result = await axiosInstance.post(`/cart/remove/${id}`)
       if (result.data) setInCart(false)
     } catch (error) {
       console.error("Error removing from cart:", error);
+      if (error.response.data.redirectTo) {
+        navigate(error.response.data.redirectTo)
+      }
     }
   }
   useEffect(() => {
     IsProductInCart()
   }, [inCart])
-  
+
   return (
     <div className="bg-zinc-800 rounded-2xl border border-zinc-700 shadow-lg overflow-hidden hover:-translate-y-1 hover:shadow-cyan-500/20 transition-all duration-300">
       {/* 🖼️ Product Image */}
@@ -52,7 +59,7 @@ const ProductCard = ({ title, description, price, discount, thumbnail, id, stock
         <div className="flex items-center justify-between mb-4 flex-wrap">
           <div>
             <span className="text-cyan-400 text-lg font-semibold mr-2">
-              ₹{price * (100 - discount) / 100}
+              ₹{finalPrice}
             </span>
             <span className="text-zinc-500 line-through text-sm">
               ₹{price}
@@ -72,11 +79,18 @@ const ProductCard = ({ title, description, price, discount, thumbnail, id, stock
             onClick={AddToCart}
             className="w-full bg-cyan-600 hover:bg-cyan-500 scale-75 text-white font-semibold py-2 rounded-xl transition-all duration-200">
             Add to Cart
-          </button> : <button
+          </button> : <> <button
             onClick={RemoveFromCart}
             className="w-full bg-red-500 hover:bg-red-600 scale-75 tracking-tighter text-white font-semibold py-2 rounded-xl transition-all duration-200">
             Remove from Cart
-          </button>}
+          </button>
+            <button
+              onClick={()=>{navigate("/cart")}}
+              className="w-full bg-cyan-500 hover:bg-cyan-600 scale-75 tracking-tighter text-white font-semibold py-2 rounded-xl transition-all duration-200">
+              View  Cart
+            </button>
+          </>
+        }
       </div>
     </div>
   );

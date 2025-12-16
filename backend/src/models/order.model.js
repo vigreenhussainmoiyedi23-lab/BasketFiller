@@ -13,9 +13,15 @@ const orderSchema = mongoose.Schema({
         }
     ],
     totalAmount: Number,// sum of all  totalPrice
-    status: { type: String, default: "pending" },
+    paymentStatus: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
+    paymentId: String,
+    orderStatus: {
+        type: String,
+        enum: ["placed", "shipped", "delivered", "cancelled"],
+        default: "placed"
+    },
     createdAt: { type: Date, default: Date.now },
-    paymentOption:{type:String,enum:['COD','ONLINE'], default:'COD'},
+    paymentOption: { type: String, enum: ['COD', 'ONLINE'], default: 'COD' },
 }, {
     toJSON: { virtuals: true }  // 👈 important
 })

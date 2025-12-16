@@ -15,6 +15,7 @@ const ProductContainer = ({products}) => {
                     title={product.title}
                     price={product.price}
                     discount={product.discount}
+                    finalPrice={product.finalPrice}
                     description={product.description}
                     thumbnail={product.thumbnail} 
                     stock={product.stock}

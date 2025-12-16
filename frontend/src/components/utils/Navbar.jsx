@@ -57,25 +57,25 @@ const Navbar = ({ navigate }) => {
                     <div className='hidden md:flex gap-4 items-center justify-around w-max '>
                         <NavLink
                         to='/cart'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center text-zinc-500'}
+                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
                         >Cart
                             <ShoppingCart />
                         </NavLink>
                         <NavLink
                         to='/products'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center text-zinc-500'}
+                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
                         >Product
 
                         </NavLink>
                         <NavLink
                         to='/profile'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center text-zinc-500'}
+                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
                         >Profile
                             <User />
                         </NavLink>
                         <NavLink
                         to='/contact'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center text-zinc-500'}
+                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
                         >Contact
                             <PhoneIcon />
                         </NavLink>

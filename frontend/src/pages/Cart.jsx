@@ -5,16 +5,21 @@ import { useEffect } from "react";
 import { Minus, Plus, Trash } from "lucide-react";
 import Navbar from "../components/utils/Navbar";
 import Footer from "../components/Home/Footer";
+import { useNavigate, Link } from 'react-router-dom'
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState(null)
     const [updated, setUpdated] = useState(false)
+    const navigate = useNavigate()
     async function GetCartItems() {
         try {
             const response = await axiosInstance.get('/cart')
             setCartItems(response.data.cartItems);
         } catch (error) {
             console.error("Error fetching cart items:", error);
+            if (error.response.data.redirectTo) {
+                navigate(error.response.data.redirectTo)
+            }
         }
     }
     useEffect(() => {
@@ -45,16 +50,19 @@ const Cart = () => {
 
             } catch (error) {
                 console.error("Error removing from cart:", error);
+                if (error.response.data.redirectTo) {
+
+                }
             }
         },
 
     }
 
+if (!cartItems) {
+    return <><div className="w-screen h-screen bg-zinc-950">Loding CartItems</div></>
+}
 
 
-    if (!cartItems) {
-        return <div className="w-screen h-screen bg-zinc-900 backdrop-blur-3xl flex items-center justify-center text-7xl text-white animate-bounce">Loading...</div>;
-    }
     // Calculate total
     const total = cartItems.reduce(
         (acc, item) => acc + ((item.product.price * (100 - item.product.discount) / 100) * item.quantity),
@@ -69,8 +77,9 @@ const Cart = () => {
                     {/* Cart Items */}
                     <div className="flex-1 bg-zinc-900 rounded-lg sm:p-6 p-3 md:w-max w-full md:justify-normal justify-around">
                         <h2 className="text-2xl font-semibold mb-6">Your Cart</h2>
-                        {cartItems.length === 0 ? (
-                            <p className="text-gray-400">Your cart is empty.</p>
+                        {cartItems.length === 0 ? (<>
+                            <p className="text-gray-400 mb-4">Your cart is empty.</p>
+                        </>
                         ) : (
                             <div className="space-y-4 h-max  w-full max-w-lg">
                                 {cartItems.map((item) => (
@@ -114,6 +123,7 @@ const Cart = () => {
                         )}
                     </div>
 
+
                     {/* Summary */}
                     <div className="w-full md:w-1/3 bg-zinc-900 rounded-lg p-6 flex flex-col gap-6">
                         <h2 className="text-2xl font-semibold">Order Summary</h2>
@@ -130,14 +140,23 @@ const Cart = () => {
                             <span>Total</span>
                             <span>₹{(total)}</span>
                         </div>
-                        <button className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
+                        {cartItems.length===0?
+                        
+                        <button
+                            onClick={() => { navigate("/products") }}
+                            className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
+                            Add Products In cart
+                        </button>:<button
+                            onClick={() => { navigate("/checkout") }}
+                            className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
                             Checkout
                         </button>
+                        }
                     </div>
                 </div>
 
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 };

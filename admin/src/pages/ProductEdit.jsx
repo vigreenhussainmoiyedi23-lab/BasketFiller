@@ -5,12 +5,12 @@ import axiosInstance from '../utils/axiosInstance'
 
 const ProductEdit = () => {
     const { id } = useParams()
+    const [product, setProduct] = useState(null);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState(0);
     const [stock, setStock] = useState(0);
     const [discount, setDiscount] = useState(0);
-    const [product, setProduct] = useState(null);
     const [categoury, setCategoury] = useState('')
     const [categouries, setCategouries] = useState([
         'electronics',
@@ -86,8 +86,9 @@ const ProductEdit = () => {
                             Category</label>
                         <select
                             className="border-2 w-[95%] outline-none"
-                            name="categoury" id="categoury" onChange={(e) => { setCategoury(e.target.value) }} value={categoury}>
-                            <option value="">Select a Category</option>
+                            name="categoury" id="categoury"
+                             onChange={(e) => { setCategoury(e.target.value) }} 
+                             value={categoury || product.categoury}>
                             {!categouries.length == 0 ? categouries.map(categoury => { return <option value={categoury}>{categoury}</option> }) : ''}
                         </select>
                     </div>

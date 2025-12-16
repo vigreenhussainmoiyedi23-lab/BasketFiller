@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
-import { DeleteHandler } from "../../../backend/src/controllers/product.controllers";
-
 const ProductMore = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);

@@ -26,7 +26,7 @@ const ProductCard = ({ title, thumbnail, price, discount, description, id, stock
     }
   }
   return (
-    <div className="rounded-md self-center shadow-md drop-shadow-2xl shadow-black/50 h-max mx-auto min-h-75 w-full sm:max-w-md max-w-100  px-5 py-2 bg-white backdrop-blur-3xl overflow-hidden">
+    <div className="rounded-md hover:scale-110 hover:z-9 hover:border-2 hover:shadow-2xl hover:shadow-black/30 hover:border-blue-300 transition-all duration-175 ease-linear self-center shadow-md drop-shadow-2xl shadow-black/50 h-max mx-auto min-h-75 w-full sm:max-w-md max-w-100  px-5 py-2 bg-white backdrop-blur-3xl overflow-hidden">
       {/* 🖼️ Image */}
       <div className="relative w-full h-40 rounded-md overflow-hidden">
         {isLoading && <Skeleton width="100%" height={160} />}
