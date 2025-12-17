@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {  NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import DropDownMenu from '../Home/DropDownMenu'
 import axiosInstance from '../../utils/AxiosInstance'
 import { ToastContainer, toast, Bounce } from 'react-toastify';
@@ -32,20 +32,20 @@ const Navbar = ({ navigate }) => {
     }
     const notify = () => { toast.success('You are being log out') }
     return (
-        <> 
-        <ToastContainer
-            position="top-left"
-            autoClose={1000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick={false}
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable
-            pauseOnHover={false}
-            theme="dark"
-            transition={Bounce}
-        />
+        <>
+            <ToastContainer
+                position="top-left"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+                transition={Bounce}
+            />
             <nav
                 className='flex justify-around rounded-b-4xl gap-2 w-full m-auto text-2xl text-white bg-white/5 backdrop-blur-2xl items-center min-h-[10vh] max-h-max py-3 px-10 '>
                 <div>
@@ -56,28 +56,29 @@ const Navbar = ({ navigate }) => {
                     <DropDownMenu logoutHandler={logoutHandler} />
                     <div className='hidden md:flex gap-4 items-center justify-around w-max '>
                         <NavLink
-                        to='/cart'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
-                        >Cart
-                            <ShoppingCart />
+                            to='/contact'
+                            className={({ isActive }) => isActive ? 'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center' : ' md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-centerline  font-semibold text-gray-400'}
+                        >Contact
+                            <PhoneIcon />
                         </NavLink>
+
                         <NavLink
-                        to='/products'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
+                            to='/products'
+                            className={({ isActive }) => isActive ? 'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center' : ' md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-centerline  font-semibold text-gray-400'}
                         >Product
 
                         </NavLink>
                         <NavLink
-                        to='/profile'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
+                            to='/profile'
+                            className={({ isActive }) => isActive ? 'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center' : ' md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-centerline  font-semibold text-gray-400'}
                         >Profile
                             <User />
                         </NavLink>
                         <NavLink
-                        to='/contact'
-                            className={({isActive})=>isActive?'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center':'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center font-semibold text-zinc-200'}
-                        >Contact
-                            <PhoneIcon />
+                            to='/cart'
+                            className={({ isActive }) => isActive ? 'md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-center' : ' md:text-xl lg:text-2xl xl:text-3xl flex items-center justify-centerline  font-semibold text-gray-400'}
+                        >Cart
+                            <ShoppingCart />
                         </NavLink>
                     </div>
                 </div>

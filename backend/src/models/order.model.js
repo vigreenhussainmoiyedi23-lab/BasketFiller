@@ -3,7 +3,15 @@ const mongoose = require('mongoose')
 
 const orderSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
-    address: String,
+    fullName: String,
+    phoneNumber: Number,
+    street: String,
+    city: String,
+    state: {
+        type: String,
+        enum: ["Madhya Pradesh", "Uttrakhand", "Haryana", "Uttar Pradesh", "Maharashtra", "Gujarat"],
+        required: true,
+    },
     products: [
         {
             productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
@@ -14,7 +22,6 @@ const orderSchema = mongoose.Schema({
     ],
     totalAmount: Number,// sum of all  totalPrice
     paymentStatus: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
-    paymentId: String,
     orderStatus: {
         type: String,
         enum: ["placed", "shipped", "delivered", "cancelled"],

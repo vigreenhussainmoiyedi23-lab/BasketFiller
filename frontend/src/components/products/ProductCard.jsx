@@ -74,14 +74,15 @@ const ProductCard = ({ title, description, price, discount, finalPrice, thumbnai
         </div>
 
         {/* 🔘 Button */}
-        {!inCart ?
+       
+        {!stock>0?<p className="text-red-600 text-sm md:text-xl">No stock available</p> :!inCart ?
           <button
-            onClick={AddToCart}
-            className="w-full bg-cyan-600 hover:bg-cyan-500 scale-75 text-white font-semibold py-2 rounded-xl transition-all duration-200">
-            Add to Cart
+          onClick={AddToCart}
+          className="w-full bg-cyan-600 hover:bg-cyan-500 scale-75 text-white font-semibold py-2 rounded-xl transition-all duration-200">
+          Add to Cart
           </button> : <> <button
-            onClick={RemoveFromCart}
-            className="w-full bg-red-500 hover:bg-red-600 scale-75 tracking-tighter text-white font-semibold py-2 rounded-xl transition-all duration-200">
+          onClick={RemoveFromCart}
+          className="w-full bg-red-500 hover:bg-red-600 scale-75 tracking-tighter text-white font-semibold py-2 rounded-xl transition-all duration-200">
             Remove from Cart
           </button>
             <button
@@ -89,6 +90,7 @@ const ProductCard = ({ title, description, price, discount, finalPrice, thumbnai
               className="w-full bg-cyan-500 hover:bg-cyan-600 scale-75 tracking-tighter text-white font-semibold py-2 rounded-xl transition-all duration-200">
               View  Cart
             </button>
+             
           </>
         }
       </div>
