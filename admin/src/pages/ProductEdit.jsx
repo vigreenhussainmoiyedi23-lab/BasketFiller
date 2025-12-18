@@ -12,20 +12,19 @@ const ProductEdit = () => {
     const [stock, setStock] = useState(0);
     const [discount, setDiscount] = useState(0);
     const [categoury, setCategoury] = useState('')
-    const [categouries, setCategouries] = useState([
-        'electronics',
-        'fashion',
-        'home-appliances',
-        'books',
-        'groceries',
-        'beauty-products',
-        'toys',
-        'sports',
-        'automotive',
-        'furniture',
-        'jewelry',
-        'Other',
-    ])
+    const [categouries, setCategouries] = useState()
+
+    async function GetCategouryEnumValues() {
+        try {
+            const res = await axiosInstance.get("/product/categouryEnum")
+            setCategouries(res.data.categouryEnum)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(() => {
+        GetCategouryEnumValues()
+    }, [])
     const navigate = useNavigate()
     const GetProductDetails = async () => {
         try {
@@ -87,8 +86,8 @@ const ProductEdit = () => {
                         <select
                             className="border-2 w-[95%] outline-none"
                             name="categoury" id="categoury"
-                             onChange={(e) => { setCategoury(e.target.value) }} 
-                             value={categoury || product.categoury}>
+                            onChange={(e) => { setCategoury(e.target.value) }}
+                            value={categoury || product.categoury}>
                             {!categouries.length == 0 ? categouries.map(categoury => { return <option value={categoury}>{categoury}</option> }) : ''}
                         </select>
                     </div>

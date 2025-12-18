@@ -7,9 +7,15 @@ const { productValidation, validate } = require('../utils/express-validator')
 const productUploadMiddleware = require('../middlewares/ProductUpload')
 const { isadmin } = require('../middlewares/AdminMiddleware')
 const { ProductIndexHandler, ProductMoreHandler, CreateHandler, EditHandler, DeleteHandler, FilterHandler } = require('../controllers/product.controllers')
+const productModel = require('../models/product.model')
 // /api/product
 // Common Routes
 Router.get('/', ProductIndexHandler)
+
+Router.get('/categouryEnum',async (req,res)=>{
+    const categouryEnum=await productModel.schema.path("categoury").enumValues
+    res.status(200).json({message:"succesfully fetched all enum values",categouryEnum})
+})
 Router.get('/more/:id', ProductMoreHandler)
 Router.post('/filter', FilterHandler);
 

@@ -7,7 +7,17 @@ import { useEffect } from "react";
 
 const CreateProduct = () => {
 
-
+  async function GetCategouryEnumValues() {
+    try {
+      const res=  await axiosInstance.get("/product/categouryEnum")
+      setCategouries(res.data.categouryEnum)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    GetCategouryEnumValues()
+  }, [])
   const [thumbnail, setThumbnail] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [title, setTitle] = useState("");
@@ -17,20 +27,10 @@ const CreateProduct = () => {
   const [stock, setStock] = useState('');
   const [categoury, setCategoury] = useState('Other')
   const [errorMessage, setErrorMessage] = useState(null)
-  const [categouries, setCategouries] = useState([
-    'electronics',
-    'fashion',
-    'home-appliances',
-    'books',
-    'groceries',
-    'beauty-products',
-    'toys',
-    'sports',
-    'automotive',
-    'furniture',
-    'jewelry',
-    'Other',
-  ])
+  const [categouries, setCategouries] = useState()
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -82,6 +82,10 @@ const CreateProduct = () => {
       }
     }
   };
+
+  if (!categouries) {
+    return <><h1>Loading essential things</h1></>
+  }
 
   return (
     <div className="w-full min-h-screen flex justify-center items-center bg-gray-100 py-10">

@@ -8,14 +8,17 @@ const User = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
   const [orders, setOrders] = useState([])
-
+  const [show, setShow] = useState("Both")
   async function CanAcces() {
     try {
-      const result = await axiosInstance.get('/user/profile')
+      const result = await axiosInstance.get('/order/user')
+      const userRoute = await axiosInstance.get('/user/profile')
+      const orders = result.data.orders
       if (result.data.redirectTo) navigate(result.data.redirectTo)
       // Assuming backend sends user & orders data later
-      setUser(result.data.user || { username: 'John Doe', email: 'johndoe@email.com', profilePic: '/placeholder-user.jpg' })
-      setOrders(result.data.orders || [1, 2, 3, 4]) // placeholder orders
+      console.log(orders)
+      setUser(userRoute.data.user || { username: 'User', email: 'user@gmail.com', profilePic: '/placeholder-user.jpg' })
+      setOrders(orders || [1, 2, 3, 4]) // placeholder orders
 
     } catch (error) {
       const data = error.response?.data
@@ -67,27 +70,38 @@ const User = () => {
           <h2 className="text-2xl font-semibold mb-5 border-b border-gray-700 pb-2">
             Your Orders 🛍️
           </h2>
-
           {/* Placeholder orders list */}
-          <div className="space-y-5">
-            {orders.map((order, idx) => (
+          <div className="space-y-5 mt-5">
+            {orders.map((elem, idx) => (
               <div
                 key={idx}
-                className="flex flex-col md:flex-row justify-between items-start md:items-center bg-gray-900/60 border border-gray-700 p-5 rounded-xl hover:bg-gray-900/80 transition-all"
+                className="flex flex-col md:flex-row justify-between items-center md:items-center bg-gray-900/60 border border-gray-700 p-5 rounded-xl hover:bg-gray-900/80 transition-all"
               >
                 {/* Product details placeholder */}
                 <div>
-                  <h3 className="text-lg font-semibold">Product Name #{idx + 1}</h3>
-                  <p className="text-gray-400 text-sm">Order ID: #000{idx + 100}</p>
-                  <p className="text-gray-400 text-sm mt-1">Quantity: -- | Price: ₹--.--</p>
+                  <h3>Total Products: 
+                    <span className='text-yellow-300 font-bold mx-3'>
+                      {elem.order.products.length}
+                    </span>
+                  </h3>
+                  <h3>Date:{""} 
+                    <span className='text-yellow-300 font-bold mx-3'>
+                      {new Date(elem.order.createdAt).toLocaleString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
+                    </span>
+                  </h3>
+                  <h3>Total Amount: 
+                    <span className='text-yellow-300 font-bold mx-3'>
+                      ₹ {elem.order.totalAmount}
+                    </span>
+                  </h3>
                 </div>
 
                 {/* Order Status placeholder */}
-                <div className="mt-3 md:mt-0 flex flex-col items-start md:items-end">
-                  <span className="text-yellow-400 font-semibold">Status: Processing</span>
-                  <button className="mt-2 px-4 py-1 bg-purple-500 hover:bg-purple-600 rounded-full text-sm font-semibold">
+                < div className="mt-3 md:mt-0 flex flex-col items-start md:items-end" >
+                  <span className="text-yellow-400 font-semibold">Status: {elem.status}</span>
+                  <Link to={`/orders/more/${elem.order.id}`} className="mt-2 px-4 py-1 bg-purple-500 hover:bg-purple-600 rounded-full text-sm font-semibold">
                     View Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
@@ -97,11 +111,11 @@ const User = () => {
           {orders.length === 0 && (
             <p className="text-center text-gray-400 mt-6">No orders found yet.</p>
           )}
-        </section>
-      </div>
+        </section >
+      </div >
 
       <Footer />
-    </div>
+    </div >
   </>
   )
 }

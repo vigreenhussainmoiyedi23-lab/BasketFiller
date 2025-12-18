@@ -11,14 +11,16 @@ body,#root {
 
 @keyframes infiniteLinearTextTravel {
  0%{
-  left:200%
+  left:0%
  }
  100%{
-  left:-200%
+  left:-800%
  }
 }
 
 .animate-linearLoop{
-  animation: infiniteLinearTextTravel 20s  linear  infinite  forwards;
-  
+  animation: infiniteLinearTextTravel 200s  linear  infinite;
+}
+.animate-linearLoop-smalldevices{
+  animation: infiniteLinearTextTravel 100s  linear  infinite;
 }

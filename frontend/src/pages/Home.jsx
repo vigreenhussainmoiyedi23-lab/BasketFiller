@@ -13,10 +13,8 @@ const Home = () => {
   const navigate = useNavigate()
   async function CanAcces() {
     try {
-
-      const result = await axiosInstance.get('/product')
-      if (result.data.redirectTo) navigate(result.data.redirectTo)
-
+      const res = await axiosInstance.get('/product')
+      
     } catch (error) {
       const data = error.response.data
       if (data) {
@@ -27,8 +25,6 @@ const Home = () => {
 
   useEffect(() => {
     CanAcces()
-
-
   }, [])
 
 

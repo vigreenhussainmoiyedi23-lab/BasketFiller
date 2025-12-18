@@ -67,8 +67,8 @@ const OrderValidator = [
   body("paymentStatus")
     .notEmpty()
     .withMessage("Payment status is required")
-    .isIn(["success", "pending", "failed"])
-    .withMessage("Payment status must be success, pending, or failed"),
+    .isIn(["paid", "pending", "failed"])
+    .withMessage("Payment status must be paid, pending, or failed"),
 ]
 
   module.exports = {
