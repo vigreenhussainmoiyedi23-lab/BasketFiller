@@ -14,7 +14,7 @@ Router.get("/stateEnum", async (req, res) => {
 
 
 Router.get("/more/:orderId", UserCanAcces, async (req, res) => {
-    const order = await orderModel.findOne({ _id: req.params.orderId })
+    const order = await orderModel.findOne({ _id: req.params.orderId }).populate("products.product")
     return res.status(200).json({ messgae: "all orders of the user", order })
 })
 Router.get("/", UserCanAcces, async (req, res) => {
@@ -22,7 +22,7 @@ Router.get("/", UserCanAcces, async (req, res) => {
     return res.status(200).json({ messgae: "all orders of the user", order })
 })
 Router.get("/user", UserCanAcces, async (req, res) => {
-    const user =await UserModel.findById(req.user._id).populate("Orders.order")
+    const user = await UserModel.findById(req.user._id).populate("Orders.order")
     return res.status(200).json({ messgae: "all orders of the user", orders: user.Orders })
 })
 
@@ -42,7 +42,7 @@ Router.post('/create', UserCanAcces, OrderValidator, validate, async (req, res) 
         const quantity = n.quantity
         const totalPrice = finalPrice * quantity
         const productId = n.product._id
-        n = { finalPrice, quantity, totalPrice, productId }
+        n = { finalPrice, quantity, totalPrice, product:productId }
         return n
     })
 
@@ -78,7 +78,21 @@ Router.post('/create', UserCanAcces, OrderValidator, validate, async (req, res) 
     user.CartItems = []
     user.Orders.unshift({ order: orderCreated._id, status: "checkedOut" })
     await user.save()
-
+    res.status(200).json({ message: "order created succcessfully" })
+})
+Router.post('/cancel/:orderId', UserCanAcces, async (req, res) => {
+    const order = await orderModel.findOne({ _id: req.params.orderId })
+    if (!order) return res.status(400).json({ message: "Order Id Is Wrong" })
+    // increasing the stock left value by the value of the quantity ordered by user
+    const UpdateProducts = await Promise.all(order.products.map(async (n) => {
+        const product = await productModel.findOne({ _id: n.product })
+        const stock = product.stock + n.quantity
+        product.stock = stock
+        await product.save()
+        return "success"
+    }))
+    order.OrderStatus = "cancelled"
+    await order.save()
     res.status(200).json({ message: "order created succcessfully" })
 })
 

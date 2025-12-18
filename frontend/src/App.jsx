@@ -10,6 +10,7 @@ import ContactUs from './pages/ContactUs';
 import Product from './pages/products/Product';
 import Cart from './pages/Cart';
 import CheckoutPage from './pages/CheckoutPage';
+import OrderDetails from './pages/User/OrdersMore';
 const App = () => {
 
   return (
@@ -24,8 +25,8 @@ const App = () => {
     <Route path='/cart' element={<Cart/>}/>
     <Route path='/checkout' element={<CheckoutPage/>}/>
     <Route path='/profile/edit/:id' element={<EditProfile/>}/>
+    <Route path='/orders/more/:id' element={<OrderDetails/>}/>
     <Route path='/profile/security/:id' element={<UpdateProfile/>}/>
-    
    </Routes>
    </>
   )

@@ -84,7 +84,7 @@ const User = () => {
                       {elem.order.products.length}
                     </span>
                   </h3>
-                  <h3>Date:{""} 
+                  <h3>Date:
                     <span className='text-yellow-300 font-bold mx-3'>
                       {new Date(elem.order.createdAt).toLocaleString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
                     </span>
