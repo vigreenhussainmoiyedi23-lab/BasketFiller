@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Input from "./Input";
-import axiosInstance from "../utils/axiosInstance";
+import Input from "../common/Input";
+import axiosInstance from "../../utils/axiosInstance";
 import { useEffect } from "react";
 
 

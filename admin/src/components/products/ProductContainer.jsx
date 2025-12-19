@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ProductCard from './ProductCard'
-import axiosInstance from '../utils/axiosInstance'
+import axiosInstance from '../../utils/axiosInstance'
 
 const ProductContainer = () => {
   const [products, setProducts] = useState([])

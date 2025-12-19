@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import Navbar from '../components/Navbar'
-import ProductCard from '../components/ProductCard'
-import ProductContainer from '../components/ProductContainer'
-import Input from '../components/Input'
-import CreateProduct from '../components/CreateProduct'
+import Sidebar from '../components/common/Sidebar'
+import Navbar from '../components/common/Navbar'
+import ProductContainer from '../components/products/ProductContainer'
+import CreateProduct from '../components/products/CreateProduct'
 
 
 const Products = () => {

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import Navbar from '../components/Navbar'
+import Sidebar from '../components/common/Sidebar'
+import Navbar from '../components/common/Navbar'
 import axiosInstance from '../utils/axiosInstance'
 import { useNavigate } from 'react-router-dom'
 

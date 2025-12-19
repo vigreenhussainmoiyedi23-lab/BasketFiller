@@ -15,11 +15,11 @@ Router.get("/stateEnum", async (req, res) => {
 
 Router.get("/more/:orderId", UserCanAcces, async (req, res) => {
     const order = await orderModel.findOne({ _id: req.params.orderId }).populate("products.product")
-    return res.status(200).json({ messgae: "all orders of the user", order })
+    return res.status(200).json({ messgae: "every detail of the order", order })
 })
-Router.get("/", UserCanAcces, async (req, res) => {
-    const order = await orderModel.findOne({ _id: req.params.orderId })
-    return res.status(200).json({ messgae: "all orders of the user", order })
+Router.get("/", async (req, res) => {
+    const orders = await orderModel.find().populate("products.product")
+    return res.status(200).json({ messgae: "all orders", orders })
 })
 Router.get("/user", UserCanAcces, async (req, res) => {
     const user = await UserModel.findById(req.user._id).populate("Orders.order")
@@ -97,8 +97,39 @@ Router.post('/cancel/:orderId', UserCanAcces, async (req, res) => {
 })
 
 // Admin updates order status
-Router.post('/update/:orderid', isadmin, (req, res) => {
+Router.post('/update/:orderid/:status', isadmin, async (req, res) => {
+  try {
+    const { orderid, status } = req.params;
 
-})
+    // ✅ Validate incoming status
+    const validStatuses = ["placed", "shipped", "delivered", "cancelled"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid order status" });
+    }
+
+    // ✅ Update the order safely
+    const order = await orderModel.findOneAndUpdate(
+      { _id: orderid },
+      { orderStatus: status },
+      { new: true } // return the updated document
+    );
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    return res.status(200).json({
+      message: "Order status updated successfully",
+      updatedOrder: order,
+    });
+  } catch (error) {
+    console.error("Order update error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+});
+
 
 module.exports = Router 
