@@ -1,7 +1,7 @@
 import React from 'react'
-import Navbar from '../components/common/Navbar'
-import Sidebar from '../components/common/Sidebar'
-import OrderContainer from '../components/orders/OrderContainer'
+import Navbar from '../../components/common/Navbar'
+import Sidebar from '../../components/common/Sidebar'
+import OrderContainer from '../../components/orders/OrderContainer'
 
 const Orders = () => {
   return (

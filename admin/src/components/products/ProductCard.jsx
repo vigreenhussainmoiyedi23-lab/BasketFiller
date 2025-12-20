@@ -11,6 +11,9 @@ const ProductCard = ({ title, thumbnail, price, discount, description, id, stock
     setIsLoading(false)
   }, 3000);
   const deleteHandler = async () => {
+    if (!confirm("Are you sure you want to delete this product")) {
+      return
+    }
     try {
       const result = await axiosInstance.get(`/product/delete/${id}`)
       console.log(result)

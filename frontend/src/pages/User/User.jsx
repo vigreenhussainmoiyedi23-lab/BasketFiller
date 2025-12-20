@@ -16,7 +16,6 @@ const User = () => {
       const orders = result.data.orders
       if (result.data.redirectTo) navigate(result.data.redirectTo)
       // Assuming backend sends user & orders data later
-      console.log(orders)
       setUser(userRoute.data.user || { username: 'User', email: 'user@gmail.com', profilePic: '/placeholder-user.jpg' })
       setOrders(orders || [1, 2, 3, 4]) // placeholder orders
 
@@ -29,7 +28,6 @@ const User = () => {
   useEffect(() => {
     CanAcces()
   }, [])
-
   return (<>
     <div className="min-h-screen overflow-x-hidden w-full bg-linear-to-br from-gray-900 via-black to-gray-800 text-white  ">
 
@@ -73,6 +71,7 @@ const User = () => {
           {/* Placeholder orders list */}
           <div className="space-y-5 mt-5">
             {orders.map((elem, idx) => (
+              
               <div
                 key={idx}
                 className="flex flex-col md:flex-row justify-between items-center md:items-center bg-gray-900/60 border border-gray-700 p-5 rounded-xl hover:bg-gray-900/80 transition-all"
@@ -98,7 +97,7 @@ const User = () => {
 
                 {/* Order Status placeholder */}
                 < div className="mt-3 md:mt-0 flex flex-col items-start md:items-end" >
-                  <span className="text-yellow-400 font-semibold">Status: {elem.status}</span>
+                  <span className="text-yellow-400 font-semibold">Status: {elem.order.orderStatus}</span>
                   <Link to={`/orders/more/${elem.order.id}`} className="mt-2 px-4 py-1 bg-purple-500 hover:bg-purple-600 rounded-full text-sm font-semibold">
                     View Details
                   </Link>

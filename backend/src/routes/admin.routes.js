@@ -22,7 +22,7 @@ Router.post('/login',LoginValidator,validate, async (req, res) => {
 })
 // admin dets email=admin@company.com, password=admin@123
 Router.post('/update',LoginValidator,validate,isadmin ,async (req, res) => {
-    const { oldPassword, oldEmail, email, password } = req.body
+    const { oldPassword, oldEmail, newEmail, newPassword } = req.body
     const admin = await adminModel.findOne({ email: oldEmail })
     if (!admin) return res.status(403).json({ message: "Incorrect Credentials" })
     const result = await comparePassword(oldPassword, admin.password)
@@ -30,8 +30,8 @@ Router.post('/update',LoginValidator,validate,isadmin ,async (req, res) => {
     if (!email || !password) {
         res.status(401).json({ message: "Email or Password cannot be empty" })
     }
-    const hashedPassword = await HashPassword(password)
-    admin.email = email
+    const hashedPassword = await HashPassword(newPassword)
+    admin.email = newEmail
     admin.password = hashedPassword
     await admin.save()
     res.status(200).json({

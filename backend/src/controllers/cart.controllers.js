@@ -35,6 +35,9 @@ async function IncreaseQuantityHandler(req, res) {
         if (idx === -1) {
             return res.status(400).json({ message: "Product not found in cart" })
         }
+    if (product.stock<=user.CartItems[idx].quantity) {
+        return res.status(400).json({message:"No More Stock Available"})
+    }
         await QuantityHandler('increase', idx, user);
         res.status(200).json({ message: "Quantity incresed of the product successfully", success:true, })
     } catch (error) {

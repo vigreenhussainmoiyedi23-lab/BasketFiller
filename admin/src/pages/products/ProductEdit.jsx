@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import Input from '../components/common/Input'
-import axiosInstance from '../utils/axiosInstance'
+import Input from '../../components/common/Input'
+import axiosInstance from '../../utils/axiosInstance'
 
 const ProductEdit = () => {
     const { id } = useParams()

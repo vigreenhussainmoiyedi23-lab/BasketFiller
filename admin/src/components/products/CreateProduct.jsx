@@ -145,7 +145,7 @@ const CreateProduct = () => {
             <select
             className="border-2 w-[95%] outline-none"
             name="categoury" id="categoury" onChange={(e) => { setCategoury(e.target.value) }} value={categoury}>
-              {!categouries.length == 0 ? categouries.map(categoury => { return <option value={categoury}>{categoury}</option> }) : ''}
+              {!categouries.length == 0 ? categouries.map((categoury,idx) => { return <option key={idx} value={categoury}>{categoury}</option> }) : ''}
             </select>
           </div>
 

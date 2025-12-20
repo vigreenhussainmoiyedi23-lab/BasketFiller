@@ -6,7 +6,6 @@ const OrderContainer = () => {
 const getAllOrders=async ()=>{
 try {
   const {data}=await axiosInstance.get("/order")
-  console.log(data.orders)
   setOrders(data.orders)
 } catch (err) {
   console.error(err)
@@ -25,8 +24,7 @@ if (!orders) {
 }
   return (
     <div>
-     
-      {orders.map(n=>{return  <OrderCard order={n}/>})}
+      {orders.map((n,idx)=>{return  <OrderCard key={idx} order={n}/>})}
     </div>
   )
 }
