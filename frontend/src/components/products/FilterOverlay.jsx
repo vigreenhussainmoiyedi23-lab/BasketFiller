@@ -78,7 +78,7 @@ const FilterOverlay = ({ tempFilters, setTempFilters }) => {
                 </div>
             </Listbox>
             <h1>Price Range</h1>
-            <div className="w-full max-w-[280px] sm:max-w-[500px]">
+            <div className="w-full max-w-70 sm:max-w-125">
                 <Slider
                     value={priceRange}
                     onChange={(event, newValue) => setPriceRange(newValue)}

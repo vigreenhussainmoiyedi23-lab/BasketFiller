@@ -8,7 +8,7 @@ const ProductContainer = ({products}) => {
         return <p className='text-4xl font-bold animate-pulse'>No products Found</p>
     }
     return (
-        <div className='h-max w-full gap-2 grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 p-4'>
+        <div className='h-max w-full gap-4 grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 p-4'>
             {products.map(product => {
                 return <ProductCard
                     key={product._id}
@@ -19,6 +19,7 @@ const ProductContainer = ({products}) => {
                     description={product.description}
                     thumbnail={product.thumbnail} 
                     stock={product.stock}
+                    rating={product.rating || 0}
                     id={product._id} />
             })}
         </div>

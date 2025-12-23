@@ -18,7 +18,7 @@ async function ProductIndexHandler(req, res) {
 }
 async function ProductMoreHandler(req, res) {
     try {
-        const product = await productModel.findOne({ _id: req.params.id }).populate({path:"comments.User",select:"username"})
+        const product = await productModel.findOne({ _id: req.params.id }).populate({ path: "comments.User", select: "username" })
         if (!product) return res.status(404).json({ message: "Invalid Id : No product Found" })
         return res.status(200).json({ message: "Here is the details", product })
     } catch (error) {
@@ -53,12 +53,11 @@ async function FilterHandler(req, res) {
                 finalPrice: {
                     $multiply: ["$price",
                         {
-                            $divide: [{$subtract: [100, "$discount"]} , 100]
+                            $divide: [{ $subtract: [100, "$discount"] }, 100]
                         }]
                 }
             }
         })
-
         if (priceRange) {
             let [min, max] = priceRange
             if (!max) max = 100000;
@@ -91,10 +90,10 @@ async function FilterHandler(req, res) {
 
         pipeline.push({
             $skip: skip,
-           
+
         })
         pipeline.push({
-          $limit: limit
+            $limit: limit
         })
         console.log(pipeline)
 
