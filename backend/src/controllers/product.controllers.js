@@ -18,7 +18,7 @@ async function ProductIndexHandler(req, res) {
 }
 async function ProductMoreHandler(req, res) {
     try {
-        const product = await productModel.findOne({ _id: req.params.id }).lean()
+        const product = await productModel.findOne({ _id: req.params.id }).populate({path:"comments.User",select:"username"})
         if (!product) return res.status(404).json({ message: "Invalid Id : No product Found" })
         return res.status(200).json({ message: "Here is the details", product })
     } catch (error) {

@@ -16,6 +16,7 @@ const adminRoutes=require('./routes/admin.routes')
 const productRoutes=require('./routes/product.routes')
 const cartRoutes=require('./routes/cart.routes')
 const orderRoutes=require('./routes/order.routes')
+const commentRoutes=require('./routes/comments.routes')
 //_______Middlewares_______
 app.use(express.json())
 app.use(cookieParser())
@@ -29,5 +30,6 @@ app.use('/api/admin',adminRoutes)
 app.use('/api/product',productRoutes)
 app.use('/api/cart',cartRoutes)
 app.use('/api/order',orderRoutes)
+app.use('/api/comment',commentRoutes)
 
 module.exports=app

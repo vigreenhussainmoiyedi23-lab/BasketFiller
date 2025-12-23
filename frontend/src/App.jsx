@@ -11,6 +11,7 @@ import Product from './pages/products/Product';
 import Cart from './pages/Cart';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderDetails from './pages/User/OrdersMore';
+import ProductsMore from './pages/products/ProductsMore';
 const App = () => {
 
   return (
@@ -22,6 +23,7 @@ const App = () => {
     <Route path='/contact' element={<ContactUs/>}/>
     <Route path='/profile' element={<User/>}/>
     <Route path='/products' element={<Product/>}/>
+    <Route path='/product/:id' element={<ProductsMore/>}/>
     <Route path='/cart' element={<Cart/>}/>
     <Route path='/checkout' element={<CheckoutPage/>}/>
     <Route path='/profile/edit/:id' element={<EditProfile/>}/>

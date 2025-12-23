@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import axiosInstance from "../../utils/AxiosInstance";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 const ProductCard = ({ title, description, price, discount, finalPrice, thumbnail, id, stock }) => {
   const [inCart, setInCart] = useState(null)
   const navigate = useNavigate()
@@ -51,7 +51,7 @@ const ProductCard = ({ title, description, price, discount, finalPrice, thumbnai
       </div>
 
       {/* 🧾 Product Info */}
-      <div className="p-5">
+      <Link to={`/product/${id}`} className="p-5">
         <h2 className="text-white text-xl font-semibold mb-2">{title}</h2>
         <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{description}</p>
 
@@ -93,7 +93,7 @@ const ProductCard = ({ title, description, price, discount, finalPrice, thumbnai
              
           </>
         }
-      </div>
+      </Link>
     </div>
   );
 };
