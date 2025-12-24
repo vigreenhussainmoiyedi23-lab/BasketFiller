@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import axiosInstance from "../../utils/AxiosInstance";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
-const ProductCard = ({ title, rating, description, price, discount, finalPrice, thumbnail, id, stock }) => {
+const ProductCard = ({product}) => {
+  const { title, rating, description, price, discount, finalPrice, thumbnail, stock }=product
+  const id=product._id
   const [inCart, setInCart] = useState(null)
   const navigate = useNavigate()
   const IsProductInCart = async () => {
@@ -54,7 +56,7 @@ const ProductCard = ({ title, rating, description, price, discount, finalPrice, 
       <Link to={`/product/${id}`} className="px-5 py-2 h-30">
         <div>
           <h2 className="text-white text-xl font-semibold mb-2">{title}</h2>
-          <span className="mb-2 text-sm">{rating}⭐</span>
+          <span className="mb-2 text-sm">{rating + "⭐" || ""}</span>
           <p className="text-zinc-400 text-sm mb-4 line-clamp-2">{description}</p>
         </div>
 

@@ -58,6 +58,12 @@ async function FilterHandler(req, res) {
                 }
             }
         })
+        pipeline.push({
+            $addFields: {
+                rating: { $ifNull: [{ $avg: "$comments.rating" }, 0] }
+            }
+        });
+
         if (priceRange) {
             let [min, max] = priceRange
             if (!max) max = 100000;
@@ -95,7 +101,6 @@ async function FilterHandler(req, res) {
         pipeline.push({
             $limit: limit
         })
-        console.log(pipeline)
 
         const products = await productModel.aggregate(pipeline)
         res.status(200).json({ message: 'Filtered results', count: products.length, products });
@@ -163,7 +168,6 @@ async function CreateHandler(req, res) {
             fileName: thumbnailFile.originalname,
             folder: 'product_thumbnails',
         });
-        console.log(thumbnailUpload)
         // Upload product images to ImageKit concurrently
         const imagesUploadPromises = productImagesFiles.map(file =>
             imagekit.upload({
@@ -173,7 +177,7 @@ async function CreateHandler(req, res) {
             })
         );
         const imagesUploadResults = await Promise.all(imagesUploadPromises);
-        console.log(imagesUploadResults)
+       
 
         // Extract URLs
         const thumbnailUrl = thumbnailUpload.url;

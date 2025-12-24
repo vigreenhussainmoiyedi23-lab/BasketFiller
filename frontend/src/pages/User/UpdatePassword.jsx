@@ -30,7 +30,6 @@ const UpdateProfile = () => {
     // Handle form submit
     const submitHandler = async (e) => {
         e.preventDefault();
-        console.log(updateDets)
         try {
             const res = await axiosInstance.post(`/user/profile/security/${user?._id}`, updateDets, Headers = { 'Content-Type': 'application/json' });
             navigate('/profile')

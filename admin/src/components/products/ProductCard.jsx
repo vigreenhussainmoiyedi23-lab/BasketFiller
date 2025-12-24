@@ -16,10 +16,10 @@ const ProductCard = ({ title, thumbnail, price, discount, description, id, stock
     }
     try {
       const result = await axiosInstance.get(`/product/delete/${id}`)
-      console.log(result)
+      
     } catch (error) {
       const data = error?.response?.data;
-      console.log(data)
+      
       if (error.status === 401) {
         alert("You are not the admin.");
       }

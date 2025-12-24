@@ -52,7 +52,7 @@ const ProductEdit = () => {
             window.history.back();
         } catch (error) {
             const data = error?.response?.data;
-            console.log(data)
+            
             if (error.status === 401) {
                 return alert("You are not the admin.");
             }

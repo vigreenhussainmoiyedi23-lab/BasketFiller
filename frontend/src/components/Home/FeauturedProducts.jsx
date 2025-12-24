@@ -1,15 +1,79 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../../utils/AxiosInstance";
+// import React, { useEffect, useState } from "react";
+// import { useQuery } from "@tanstack/react-query";
+// import axiosInstance from "../../utils/AxiosInstance";
+// import { Link, useNavigate } from "react-router-dom"
+// import ProductCard from "../products/ProductCard";
 
+// const FeaturedProducts = () => {
+// const [isLoading, setIsLoading] = useState(true)
+// const [feauturedProducts, setFeauturedProducts] = useState([])
+// async function GetFeaturedProducts() {
+//   try {
+//     const res=await axiosInstance.get("/product/featured")
+//     setFeauturedProducts(res.data.featuredProducts)
+//     setIsLoading(false)
+//   } catch (error) {
+//     console.log(error)
+//   }
+// } 
+// useEffect(() => {
+//   GetFeaturedProducts()
+// }, [])
+
+//   return (
+//     <div className="w-full py-14 text-white px-4">
+//       <h2 className="text-center text-4xl sm:text-5xl font-bold mb-10">
+//         Featured <span className="text-purple-400">Products</span>
+//       </h2>
+
+//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center">
+
+//         {/* Loading Shimmer */}
+//         {isLoading &&
+//           [...Array(4)].map((_, i) => (
+//             <div
+//               key={i}
+//               className="w-[250px] h-[330px] rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 animate-pulse"
+//             ></div>
+//           ))}
+
+//         {/* Product Cards */}
+//         {!isLoading &&
+//           feauturedProducts?.map((p) => (
+//           <ProductCard product={p}/>
+//           ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FeaturedProducts;
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../utils/AxiosInstance";
+import ProductCard from "../products/ProductCard";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "../../FeaturedProducts.css"
 const FeaturedProducts = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["featured-products"],
-    queryFn: async () => {
-      const res = await axiosInstance.get("/products/featured");
-      return res.data.products;
-    },
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  async function GetFeaturedProducts() {
+    try {
+      const res = await axiosInstance.get("/product/featured");
+      setFeaturedProducts(res.data.featuredProducts);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    GetFeaturedProducts();
+  }, []);
 
   return (
     <div className="w-full py-14 text-white px-4">
@@ -17,41 +81,39 @@ const FeaturedProducts = () => {
         Featured <span className="text-purple-400">Products</span>
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8 place-items-center">
-
-        {/* Loading Shimmer */}
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={25}
+        centeredSlides={true}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        loop={true}
+        breakpoints={{
+          320: { slidesPerView: 0.5 },
+          640: { slidesPerView: 1.5 },
+          1024: { slidesPerView: 2.5 },
+          1280: { slidesPerView: 3.5 },
+        }}
+        className="pb-12"
+      >
+        {/* 🌀 Loading Shimmer Slides */}
         {isLoading &&
           [...Array(4)].map((_, i) => (
-            <div
-              key={i}
-              className="w-[250px] h-[330px] rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 animate-pulse"
-            ></div>
+            <SwiperSlide key={i}>
+              <div className="w-[250px] h-[330px] rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 animate-pulse mx-auto"></div>
+            </SwiperSlide>
           ))}
 
-        {/* Product Cards */}
+        {/* 🛍 Product Slides */}
         {!isLoading &&
-          data?.map((p) => (
-            <div
-              key={p._id}
-              className="w-[250px] h-[330px] bg-white/10 backdrop-blur-xl border border-white/10 rounded-xl p-4 hover:scale-105 transition-all"
-            >
-              <div className="w-full h-[180px] rounded-lg overflow-hidden">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  className="w-full h-full object-cover hover:scale-110 duration-300"
-                />
-              </div>
-
-              <p className="mt-3 text-xl font-semibold">{p.name}</p>
-              <p className="text-purple-300 text-lg font-bold">₹{p.price}</p>
-
-              <button className="mt-3 w-full bg-purple-500 text-white py-2 rounded-lg hover:bg-purple-600">
-                Add to Cart
-              </button>
-            </div>
+          featuredProducts?.map((p, index) => (
+            <SwiperSlide key={index}>
+              <ProductCard product={p} />
+            </SwiperSlide>
           ))}
-      </div>
+      </Swiper>
+   
     </div>
   );
 };

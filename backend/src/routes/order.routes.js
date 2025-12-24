@@ -74,7 +74,6 @@ Router.post('/create', UserCanAcces, OrderValidator, validate, async (req, res) 
     const stock = product.stock - n.quantity
     product.stock = stock
     await product.save()
-    console.log(product)
     return "success"
   }))
 

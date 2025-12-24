@@ -64,7 +64,7 @@ const UserReviews = ({ reviews, onDelete, onUpdate }) => {
                             required
                             value={review.title || c.title}
                             onChange={(e) => setReview({ ...review, title: e.target.value })}
-                            className="w-full p-2 mb-2 bg-zinc-800 rounded outline-none"
+                            className="w-full border-2 border-white/20  p-2 mb-2 bg-zinc-800 rounded outline-none"
                         />
 
                         <textarea
@@ -72,7 +72,7 @@ const UserReviews = ({ reviews, onDelete, onUpdate }) => {
                             required
                             value={review.description || c.description}
                             onChange={(e) => setReview({ ...review, description: e.target.value })}
-                            className="w-full p-2 mb-2 bg-zinc-800 rounded resize-none outline-none"
+                            className="w-full border-2 border-white/20 p-2 mb-2 bg-zinc-800 rounded resize-none outline-none"
                         />
                     </> : <>
                         <h3 className="font-bold">{c.title}</h3>

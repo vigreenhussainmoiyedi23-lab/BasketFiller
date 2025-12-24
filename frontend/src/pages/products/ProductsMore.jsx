@@ -7,7 +7,7 @@ import AllReviews from "../../components/products/ProductsMore/AllReviews";
 import UserReviews from "../../components/products/ProductsMore/UserReviews";
 import ReviewForm from "../../components/products/ProductsMore/ReviewForm";
 import FeaturedProducts from "../../components/Home/FeauturedProducts"
-
+import Navbar from "../../components/utils/Navbar";
 const ProductsMore = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
@@ -74,14 +74,18 @@ const ProductsMore = () => {
         return <h1 className="text-white text-center text-4xl">Loading...</h1>;
 
     return (
-        <div className="p-6 text-white max-w-6xl mx-auto">
-            <ProductGallery product={product} />
-            <ProductInfo product={product} />
+        <>
+            <Navbar />
+            <div className="p-6 text-white max-w-6xl mx-auto">
+                <ProductGallery product={product} />
+                <ProductInfo product={product} />
+                <FeaturedProducts />
+                <AllReviews comments={product.comments} />
+                <UserReviews reviews={userReviews} onDelete={deleteHandler} onUpdate={UpdateHandler} />
+                <ReviewForm onSubmit={submitReview} />
+            </div>
 
-            <AllReviews comments={product.comments} />
-            <UserReviews reviews={userReviews} onDelete={deleteHandler} onUpdate={UpdateHandler} />
-            <ReviewForm onSubmit={submitReview} />
-        </div>
+        </>
     );
 };
 

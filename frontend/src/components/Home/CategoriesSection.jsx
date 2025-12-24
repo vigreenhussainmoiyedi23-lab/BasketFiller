@@ -11,7 +11,7 @@ const CategoriesSection = () => {
     try {
       const res = await axiosInstance.get("/product/categouryEnum")
       const data = res.data
-      console.log(data)
+     
       setCategouries(res.data.categouryEnum)
     } catch (error) {
       console.log(error)

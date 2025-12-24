@@ -12,7 +12,7 @@ const AdminLogin = () => {
     try {
       const result = await axiosInstance.post('/admin/login', { email, password })
       navigate(result.data.redirectTo)
-      console.log(result)
+   
     } catch (error) {
       const data = error.response.data
       if (data?.message) return setErrorMessage(data.message)

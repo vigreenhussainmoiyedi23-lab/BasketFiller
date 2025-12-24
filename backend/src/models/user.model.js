@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
     password: String,
     profilePic: String,
     fileId: String,
+    isBanned: { type: Boolean, default: false },
     isadmin: { type: Boolean, default: false },
     CartItems: [{ product: { type: mongoose.Schema.Types.ObjectId, ref: 'product' }, quantity: { type: Number, default: 1 } }],
     Orders: [{

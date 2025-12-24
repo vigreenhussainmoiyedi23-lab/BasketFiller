@@ -65,8 +65,6 @@ async function ContactUsHandler(req, res) {
         if (!title || !description || !phone)
             return res.status(400).json({ message: 'All fields are required' });
 
-        // You could save to DB or send an email here
-        console.log('📩 New Contact Message:', { title, description, phone });
 
         res.status(200).json({ message: 'Your query has been submitted successfully!' });
     } catch (error) {
