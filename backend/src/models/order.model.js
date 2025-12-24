@@ -61,7 +61,7 @@ const orderSchema = mongoose.Schema({
         }
     ],
     totalAmount: Number,// sum of all  totalPrice
-    paymentStatus: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
+    paymentStatus: { type: String, enum: ["pending", "paid", "failed","refunded"], default: "pending" },
     orderStatus: {
         type: String,
         enum: ["placed", "shipped", "delivered", "cancelled"],

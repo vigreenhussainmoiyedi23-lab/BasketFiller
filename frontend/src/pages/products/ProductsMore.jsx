@@ -29,7 +29,7 @@ const ProductsMore = () => {
             const { data } = await axiosInstance.post(`/comment/user/${id}`);
             setUserReviews(data.userReviews);
         } catch (err) {
-            setError(err.message);
+            console.log(err)
         }
     };
 

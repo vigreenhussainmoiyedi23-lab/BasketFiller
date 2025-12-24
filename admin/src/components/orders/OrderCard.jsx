@@ -32,6 +32,17 @@ const OrderCard = ({ order }) => {
       alert(data?.errors?.[0]?.msg || data?.message || "Something went wrong");
     }
   };
+  const refundOrder = async () => {
+    try {
+      await axiosInstance.post(`/order/refund/${order._id}`);
+      setStatus("cancelled");
+    } catch (error) {
+      const data = error?.response?.data;
+      if (error.status === 403) return alert("You are not the admin.");
+      if (data?.redirectTo) navigate(data.redirectTo);
+      alert(data?.errors?.[0]?.msg || data?.message || "Something went wrong");
+    }
+  };
 
   return (
     <div
@@ -155,7 +166,10 @@ const OrderCard = ({ order }) => {
 
       {/* Action Buttons */}
       <div className="flex flex-wrap justify-end gap-3 px-5 py-4 bg-gray-50 border-t">
-        <Link to={`/order/${order._id}`} className="bg-cyan-300 text-gray-900 font-bold px-3 py-2 rounded-4xl">View details</Link>
+        <Link to={`/order/${order._id}`}
+         className="bg-gray-500 text-gray-100 font-bold px-3 py-2 rounded-4xl">
+          View details</Link>
+      
         {status === "placed" && (
           <>
             <button
@@ -172,6 +186,13 @@ const OrderCard = ({ order }) => {
             </button>
           </>
         )}
+        {(status === "cancelled" && order.paymentStatus === "pending") ? <button
+          onClick={() => refundOrder()}
+          className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition"
+        >
+         Refund Money
+        </button>
+          : ""}
         {status === "shipped" && (
           <button
             onClick={() => updateStatus("delivered")}

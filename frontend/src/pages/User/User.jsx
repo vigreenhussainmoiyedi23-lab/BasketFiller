@@ -3,7 +3,7 @@ import axiosInstance from '../../utils/AxiosInstance'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../../components/utils/Navbar'
 import Footer from '../../components/Home/Footer'
-
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 const User = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
@@ -24,6 +24,19 @@ const User = () => {
       if (data?.redirectTo) navigate(data.redirectTo)
     }
   }
+  const logoutHandler = async () => {
+    try {
+      const res = await axiosInstance.get('/auth/logout')
+      notify()
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000);
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+  const notify = () => { toast.success('You are being log out') }
 
   useEffect(() => {
     CanAcces()
@@ -36,7 +49,19 @@ const User = () => {
       <div className='w-full h-max md:px-20 px-5'>
 
         <section className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mt-5 md:gap-12 bg-gray-800/50 rounded-2xl p-6 shadow-lg border border-gray-700">
-
+   <ToastContainer
+                position="top-left"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+                transition={Bounce}
+            />
           {/* Profile Picture */}
           <div className="shrink-0">
             <img
@@ -59,6 +84,10 @@ const User = () => {
               <button className="px-5 py-2 bg-gray-700 hover:bg-gray-600 rounded-full font-semibold transition-all">
                 <Link to={`/profile/security/${user?._id}`}>Change Password</Link>
               </button>
+              <button
+                onClick={logoutHandler}
+                className='bg-red-500 active:scale-95 text-white font-semibold rounded-4xl px-3 py-2'>Log Out</button>
+
             </div>
           </div>
         </section>
@@ -71,14 +100,14 @@ const User = () => {
           {/* Placeholder orders list */}
           <div className="space-y-5 mt-5">
             {orders.map((elem, idx) => (
-              
+
               <div
                 key={idx}
                 className="flex flex-col md:flex-row justify-between items-center md:items-center bg-gray-900/60 border border-gray-700 p-5 rounded-xl hover:bg-gray-900/80 transition-all"
               >
                 {/* Product details placeholder */}
                 <div>
-                  <h3>Total Products: 
+                  <h3>Total Products:
                     <span className='text-yellow-300 font-bold mx-3'>
                       {elem.order.products.length}
                     </span>
@@ -88,7 +117,7 @@ const User = () => {
                       {new Date(elem.order.createdAt).toLocaleString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}
                     </span>
                   </h3>
-                  <h3>Total Amount: 
+                  <h3>Total Amount:
                     <span className='text-yellow-300 font-bold mx-3'>
                       ₹ {elem.order.totalAmount}
                     </span>

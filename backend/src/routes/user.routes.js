@@ -5,8 +5,6 @@ const router = express.Router();
 const upload = require('../config/multer');
 // Controllers
 const { ProfileHandler, ProfileEditHandler, ProfileSecurityHandler, ContactUsHandler } = require("../controllers/user.controllers");
-const productModel = require('../models/product.model');
-const UserModel = require('../models/user.model');
 const { UserCanAcces } = require('../middlewares/AuthenticationMiddleware');
 
 router.get('/profile', UserCanAcces, ProfileHandler);

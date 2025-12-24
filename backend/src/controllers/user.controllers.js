@@ -79,5 +79,5 @@ module.exports = {
     ProfileHandler,
     ProfileEditHandler,
     ProfileSecurityHandler,
-    ContactUsHandler
+    ContactUsHandler,
 }

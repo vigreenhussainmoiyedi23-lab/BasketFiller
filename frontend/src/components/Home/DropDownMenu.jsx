@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 
 
-const DropDownMenu = ({ logoutHandler }) => {
+const DropDownMenu = () => {
     const [dropDown, setDropDown] = useState(false)
     return (
         <Menu as="div" className="relative md:hidden block">
@@ -70,13 +70,7 @@ const DropDownMenu = ({ logoutHandler }) => {
 
                     </MenuItem>
 
-                    <MenuItem>
-                        <button
-                            onClick={logoutHandler} className='bg-red-500 block capitalize p-2 rounded-md'>
-                            log out
-                        </button>
-                    </MenuItem>
-
+        
                 </MenuItems>
             </Transition>
         </Menu>

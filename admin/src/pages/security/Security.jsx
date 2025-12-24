@@ -31,6 +31,7 @@ const Security = () => {
         newPassword: "",
       });
     } catch (err) {
+      console.log(err)
       alert(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
