@@ -8,7 +8,6 @@ const { LoginValidator, validate } = require('../utils/express-validator')
 const UserModel = require('../models/user.model')
 const orderModel = require('../models/order.model')
 
-
 Router.post('/revenue/year', async (req, res) => {
     try {
         const year = parseInt(req.query.year) || new Date().getFullYear();

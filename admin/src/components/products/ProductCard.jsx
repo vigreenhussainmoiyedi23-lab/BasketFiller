@@ -5,7 +5,8 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axiosInstance from "../../utils/axiosInstance";
 
-const ProductCard = ({ title, thumbnail, price, discount, description, id, stock }) => {
+const ProductCard = ({ id, reload, product }) => {
+  const { title, thumbnail, price, discount, description, stock } = product
   const [isLoading, setIsLoading] = useState(true);
   setTimeout(() => {
     setIsLoading(false)
@@ -16,10 +17,10 @@ const ProductCard = ({ title, thumbnail, price, discount, description, id, stock
     }
     try {
       const result = await axiosInstance.get(`/product/delete/${id}`)
-      
+      reload(prev => prev + 1)
     } catch (error) {
       const data = error?.response?.data;
-      
+
       if (error.status === 401) {
         alert("You are not the admin.");
       }

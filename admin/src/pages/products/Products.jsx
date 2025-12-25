@@ -6,14 +6,14 @@ import CreateProduct from '../../components/products/CreateProduct'
 
 
 const Products = () => {
-
+const [reload, setReload] = useState(0)
   return (
     <div className='w-full min-h-screen relative '>
       <Sidebar />
       <Navbar />
       <div className=' md:w-[calc(100vw-256px)] md:top-0 top-[10vh] min-h-screen bg-gray-200 w-full absolute right-0'>
-        <CreateProduct />
-        <ProductContainer />
+        <CreateProduct reload={setReload}/>
+        <ProductContainer reload={setReload}/>
       </div>
     </div>
   )

@@ -1,11 +1,14 @@
 import { FaStar } from "react-icons/fa";
+import AddToCartFeauture from "../AddToCartFeauture";
 
 const ProductInfo = ({ product }) => {
   return (
     <div>
       <h1 className="text-4xl font-bold">{product.title}</h1>
       <p className="text-gray-300 mt-2">{product.description}</p>
-
+      <div>
+        <AddToCartFeauture stock={product.stock} id={product._id}/>
+      </div>
       <div className="mt-4 flex gap-4 items-center">
         <span className="text-3xl font-bold text-green-400">
           ₹{product.finalPrice}

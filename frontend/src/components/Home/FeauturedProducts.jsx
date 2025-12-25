@@ -101,7 +101,7 @@ const FeaturedProducts = () => {
         {isLoading &&
           [...Array(4)].map((_, i) => (
             <SwiperSlide key={i}>
-              <div className="w-[250px] h-[330px] rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 animate-pulse mx-auto"></div>
+              <div className="w-62.5 h-82.5 rounded-xl bg-white/10 backdrop-blur-xl border border-white/10 animate-pulse mx-auto"></div>
             </SwiperSlide>
           ))}
 

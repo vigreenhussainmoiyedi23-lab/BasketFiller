@@ -51,7 +51,7 @@ const productSchema = mongoose.Schema({
 })
 
 productSchema.virtual('finalPrice').get(function () {
-    return this.price - (this.price * this.discount) / 100;
+    return Math.floor(this.price - (this.price * this.discount) / 100);
 });
 productSchema.virtual('rating').get(function () {
     const sum = this.comments.reduce((acc, val) => {

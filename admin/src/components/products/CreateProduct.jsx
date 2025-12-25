@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import Input from "../common/Input";
 import axiosInstance from "../../utils/axiosInstance";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
-const CreateProduct = () => {
+const CreateProduct = ({ reload }) => {
 
   async function GetCategouryEnumValues() {
     try {
-      const res=  await axiosInstance.get("/product/categouryEnum")
+      const res = await axiosInstance.get("/product/categouryEnum")
       setCategouries(res.data.categouryEnum)
     } catch (error) {
       console.log(error)
@@ -28,12 +29,14 @@ const CreateProduct = () => {
   const [categoury, setCategoury] = useState('Other')
   const [errorMessage, setErrorMessage] = useState(null)
   const [categouries, setCategouries] = useState()
+  const navigate = useNavigate()
+  const [submitted, setSubmitted] = useState(false)
 
-
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (submitted)
+      return
+    setSubmitted(true)
     const fd = new FormData();
     fd.append("title", title);
     fd.append("description", description);
@@ -64,8 +67,11 @@ const CreateProduct = () => {
       setCategoury('')
       setPhotos([])
       setThumbnail(null)
+      reload(prev => prev + 1)
+      setSubmitted(false)
     } catch (error) {
       const data = error?.response?.data;
+      setSubmitted(false)
 
       if (error.status === 401) {
         return alert("You are not the admin.");
@@ -143,9 +149,9 @@ const CreateProduct = () => {
             <label className="block text-gray-700 font-semibold mb-2">
               Category</label>
             <select
-            className="border-2 w-[95%] outline-none"
-            name="categoury" id="categoury" onChange={(e) => { setCategoury(e.target.value) }} value={categoury}>
-              {!categouries.length == 0 ? categouries.map((categoury,idx) => { return <option key={idx} value={categoury}>{categoury}</option> }) : ''}
+              className="border-2 w-[95%] outline-none"
+              name="categoury" id="categoury" onChange={(e) => { setCategoury(e.target.value) }} value={categoury}>
+              {!categouries.length == 0 ? categouries.map((categoury, idx) => { return <option key={idx} value={categoury}>{categoury}</option> }) : ''}
             </select>
           </div>
 
@@ -222,7 +228,7 @@ const CreateProduct = () => {
 
           <button
             type="submit"
-            className="bg-cyan-600 active:bg-cyan-900 active:scale-95 hover:bg-cyan-700 transition-all text-white font-semibold py-3 rounded-xl shadow-md mt-4"
+            className="bg-cyan-600 active:bg-cyan-900 active:scale-70 hover:bg-cyan-700 transition-all text-white font-semibold py-3 rounded-xl shadow-md mt-4"
           >
             Upload Product
           </button>
