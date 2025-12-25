@@ -8,11 +8,123 @@ const { LoginValidator, validate } = require('../utils/express-validator')
 const UserModel = require('../models/user.model')
 const orderModel = require('../models/order.model')
 
-Router.post('/revenue/:type', isadmin, async (req, res) => {
-   const {type}=req.params
-    if (!["monthly", "daily", "yearly"].includes(type)) res.status(400).json({ message: "Invalid revenue type" })
 
-    res.status(200).json({ message: "Just A revenue give" })
+Router.post('/revenue/year', async (req, res) => {
+    try {
+        const year = parseInt(req.query.year) || new Date().getFullYear();
+
+        const data = await orderModel.aggregate([
+            // Match only orders from that year
+            {
+                $match: {
+                    $expr: { $eq: [{ $year: "$createdAt" }, year] },
+                },
+            },
+            // Group by month number
+            {
+                $group: {
+                    _id: { month: { $month: "$createdAt" } },
+                    totalSales: { $sum: "$totalAmount" },
+                    totalOrders: { $sum: 1 },
+                },
+            },
+            // Format output
+            {
+                $project: {
+                    _id: 0,
+                    month: "$_id.month",
+                    totalSales: 1,
+                    totalOrders: 1,
+                },
+            },
+            { $sort: { month: 1 } },
+        ]);
+
+        // Fill missing months with zero
+        const allMonths = Array.from({ length: 12 }, (_, i) => i + 1);
+        const completeData = allMonths.map((m) => {
+            const found = data.find((d) => d.month === m);
+            return (
+                found || {
+                    month: m,
+                    totalSales: 0,
+                    totalOrders: 0,
+                }
+            );
+        });
+
+        res.status(200).json({
+            success: true,
+            year,
+            monthlyStats: completeData,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error generating monthly stats" });
+    }
+})
+Router.post('/revenue/month', async (req, res) => {
+    try {
+        const { month, year } = req.body || { month: new Date().getMonth()+1, year: new Date().getFullYear() };
+        const allDays = Array.from({
+            length: parseInt(new Date(year, month + 1, 0).getDate())
+        }, (_, i) => i + 1);
+
+        const data = await orderModel.aggregate([
+            // Match only orders from that year
+            {
+                $match: {
+                    $expr: {
+                        $and: [
+                            { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
+                            { $eq: [{ $year: "$createdAt" }, parseInt(year)] }
+                        ]
+                    }
+                },
+            },
+            // Group by month number
+            {
+                $group: {
+                    _id: { day: { $dayOfMonth: "$createdAt" } },
+                    totalSales: { $sum: "$totalAmount" },
+                    totalOrders: { $sum: 1 },
+                },
+            },
+            // Format output
+            {
+                $project: {
+                    _id: 0,
+                    day: "$_id.day",
+                    totalSales: 1,
+                    totalOrders: 1,
+                },
+            },
+            { $sort: { day: 1 } },
+        ]);
+        // Fill missing months with zero
+
+        const completeData = allDays.map((date) => {
+            const found = data.find((d) => d.day === date);
+            return (
+                found || {
+                    day: date,
+                    totalSales: 0,
+                    totalOrders: 0,
+                }
+            );
+        });
+
+        res.status(200).json({
+            success: true,
+            year,
+            month,
+            data,
+            DailyStatus: completeData,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error generating Daily stats", err });
+    }
 })
 
 Router.get('/all', async function GetAllUserHandler(req, res) {
