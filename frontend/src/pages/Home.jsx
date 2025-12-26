@@ -14,7 +14,7 @@ const Home = () => {
   async function CanAcces() {
     try {
       const res = await axiosInstance.get('/product')
-      
+
     } catch (error) {
       const data = error.response.data
       if (data) {
@@ -29,17 +29,18 @@ const Home = () => {
 
 
   return (
-    <div className=' w-full overflow-x-hidden  backdrop-blur-[10px] min-h-full max-h-max bg-linear-to-br from-black via-black/97  to-black border border-white/10 rounded-xl'
-    >
+    <>
       <Navbar navigate={navigate} />
-
-      <Hero />
-      <FeaturedProducts />
-      <CategoriesSection />
-      <WhyChooseUs />
-      <AboutUs />
-      <Footer />
-    </div>
+      <div className=' w-full overflow-x-hidden  backdrop-blur-[10px] min-h-full max-h-max bg-linear-to-br from-black via-black/97  to-black border border-white/10 rounded-xl'
+      >
+        <Hero />
+        <FeaturedProducts />
+        <CategoriesSection />
+        <WhyChooseUs />
+        <AboutUs />
+        <Footer />
+      </div>
+    </>
   )
 }
 

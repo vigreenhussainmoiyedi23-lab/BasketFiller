@@ -85,6 +85,7 @@ Router.post('/create', UserCanAcces, OrderValidator, validate, async (req, res) 
 })
 Router.post('/cancel/:orderId', UserCanAcces, async (req, res) => {
   const order = await orderModel.findOne({ _id: req.params.orderId })
+
   if (!order) return res.status(400).json({ message: "Order Id Is Wrong" })
   // increasing the stock left value by the value of the quantity ordered by user
   const UpdateProducts = await Promise.all(order.products.map(async (n) => {
@@ -94,7 +95,7 @@ Router.post('/cancel/:orderId', UserCanAcces, async (req, res) => {
     await product.save()
     return "success"
   }))
-  order.OrderStatus = "cancelled"
+  order.orderStatus = "cancelled"
   order.paymentStatus = "pending"
   await order.save()
   res.status(200).json({ message: "order created succcessfully" })
@@ -103,7 +104,7 @@ Router.post('/refund/:orderId', UserCanAcces, async (req, res) => {
   const order = await orderModel.findOne({ _id: req.params.orderId })
   if (!order) return res.status(400).json({ message: "Order Id Is Wrong" })
   if(!order.OrderStatus == "cancelled")return res.status(400).json({ message: "Order is not cancelled" })
-  order.paymentStatus = "pending"
+  order.paymentStatus = "refunded"
   await order.save()
   res.status(200).json({ message: "Money Refunded Successfully" })
 })

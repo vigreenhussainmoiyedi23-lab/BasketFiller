@@ -18,6 +18,7 @@ const Cart = () => {
         } catch (error) {
             console.error("Error fetching cart items:", error);
             if (error.response.data.redirectTo) {
+                if (!confirm("Do you Want To Login?")) return navigate("/")
                 navigate(error.response.data.redirectTo)
             }
         }
@@ -58,9 +59,9 @@ const Cart = () => {
 
     }
 
-if (!cartItems) {
-    return <><div className="w-screen h-screen bg-zinc-950">Loding CartItems</div></>
-}
+    if (!cartItems) {
+        return <><div className="w-screen h-screen bg-zinc-950">Loding CartItems</div></>
+    }
 
 
     // Calculate total
@@ -140,17 +141,17 @@ if (!cartItems) {
                             <span>Total</span>
                             <span>₹{(total)}</span>
                         </div>
-                        {cartItems.length===0?
-                        
-                        <button
-                            onClick={() => { navigate("/products") }}
-                            className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
-                            Add Products In cart
-                        </button>:<button
-                            onClick={() => { navigate("/checkout") }}
-                            className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
-                            Checkout
-                        </button>
+                        {cartItems.length === 0 ?
+
+                            <button
+                                onClick={() => { navigate("/products") }}
+                                className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
+                                Add Products In cart
+                            </button> : <button
+                                onClick={() => { navigate("/checkout") }}
+                                className="bg-indigo-600 hover:bg-indigo-500 transition-colors text-white font-medium py-3 rounded-lg">
+                                Checkout
+                            </button>
                         }
                     </div>
                 </div>

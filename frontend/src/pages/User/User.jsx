@@ -21,7 +21,10 @@ const User = () => {
 
     } catch (error) {
       const data = error.response?.data
-      if (data?.redirectTo) navigate(data.redirectTo)
+      if (data?.redirectTo) {
+        if (!confirm("Do you Want To Login?")) return navigate("/")
+        navigate(data.redirectTo)
+      }
     }
   }
   const logoutHandler = async () => {
@@ -49,19 +52,19 @@ const User = () => {
       <div className='w-full h-max md:px-20 px-5'>
 
         <section className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mt-5 md:gap-12 bg-gray-800/50 rounded-2xl p-6 shadow-lg border border-gray-700">
-   <ToastContainer
-                position="top-left"
-                autoClose={1000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss={false}
-                draggable
-                pauseOnHover={false}
-                theme="dark"
-                transition={Bounce}
-            />
+          <ToastContainer
+            position="top-left"
+            autoClose={1000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss={false}
+            draggable
+            pauseOnHover={false}
+            theme="dark"
+            transition={Bounce}
+          />
           {/* Profile Picture */}
           <div className="shrink-0">
             <img

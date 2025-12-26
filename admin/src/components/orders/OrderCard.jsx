@@ -206,9 +206,14 @@ const OrderCard = ({ order }) => {
             ✅ Delivered
           </span>
         )}
-        {status === "cancelled" && (
+        {status === "cancelled" && order.paymentStatus==="pending" && (
           <span className="text-red-600 font-semibold text-sm flex items-center gap-1">
-            ❌ Cancelled
+            ❌ Cancelled 
+          </span>
+        )}
+        {status === "cancelled" && order.paymentStatus==="refunded" && (
+          <span className="text-green-600 font-semibold text-sm flex items-center gap-1">
+           Money Refunded 
           </span>
         )}
       </div>

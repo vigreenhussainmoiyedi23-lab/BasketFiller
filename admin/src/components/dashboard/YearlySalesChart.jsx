@@ -15,8 +15,8 @@ const YearlySalesChart = ({ data, year = new Date().getFullYear() }) => {
   const isSmall = useMediaQuery({ maxWidth: 600 });
 
   const monthNames = [
-    "Jan","Feb","Mar","Apr","May","Jun",
-    "Jul","Aug","Sep","Oct","Nov","Dec"
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
   // Convert month numbers to labels
@@ -134,6 +134,27 @@ const YearlySalesChart = ({ data, year = new Date().getFullYear() }) => {
             strokeWidth={2}
             dot={false}
             name="Total Orders"
+            animationDuration={1000}
+          />
+          <Line
+            type="monotone"
+            dataKey="ordersCancelled"
+            stroke="#22c55e"        // green for returns
+            strokeDasharray="3 3"
+            strokeWidth={2}
+            dot={false}
+            name="Orders Cancelled"
+            animationDuration={1000}
+          />
+
+          <Line
+            type="monotone"
+            dataKey="ordersRefunded"
+            stroke="#a855f7"        // purple for refunds
+            strokeDasharray="5 5"
+            strokeWidth={2}
+            dot={false}
+            name="Orders Refunded"
             animationDuration={1000}
           />
         </LineChart>

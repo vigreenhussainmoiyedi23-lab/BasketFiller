@@ -23,10 +23,29 @@ Router.post('/revenue/year', async (req, res) => {
             {
                 $group: {
                     _id: { month: { $month: "$createdAt" } },
-                    totalSales: { $sum: "$totalAmount" },
+                    totalSales: {
+                        $sum: {
+                            $cond: [
+                                { $eq: ["$paymentStatus", "paid"] },
+                                "$totalAmount",
+                                0
+                            ]
+                        }
+                    },
                     totalOrders: { $sum: 1 },
-                },
+                    ordersCancelled: {
+                        $sum: {
+                            $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0]
+                        }
+                    },
+                    ordersRefunded: {
+                        $sum: {
+                            $cond: [{ $eq: ["$paymentStatus", "refunded"] }, 1, 0]
+                        }
+                    }
+                }
             },
+
             // Format output
             {
                 $project: {
@@ -34,6 +53,8 @@ Router.post('/revenue/year', async (req, res) => {
                     month: "$_id.month",
                     totalSales: 1,
                     totalOrders: 1,
+                    ordersCancelled:1,
+                    ordersRefunded:1
                 },
             },
             { $sort: { month: 1 } },
@@ -48,6 +69,8 @@ Router.post('/revenue/year', async (req, res) => {
                     month: m,
                     totalSales: 0,
                     totalOrders: 0,
+                    ordersCancelled: 0,
+                    ordersRefunded: 0,
                 }
             );
         });
@@ -64,7 +87,7 @@ Router.post('/revenue/year', async (req, res) => {
 })
 Router.post('/revenue/month', async (req, res) => {
     try {
-        const { month, year } = req.body || { month: new Date().getMonth()+1, year: new Date().getFullYear() };
+        const { month, year } = req.body || { month: new Date().getMonth() + 1, year: new Date().getFullYear() };
         const allDays = Array.from({
             length: parseInt(new Date(year, month + 1, 0).getDate())
         }, (_, i) => i + 1);
@@ -85,8 +108,27 @@ Router.post('/revenue/month', async (req, res) => {
             {
                 $group: {
                     _id: { day: { $dayOfMonth: "$createdAt" } },
-                    totalSales: { $sum: "$totalAmount" },
+                    totalSales: {
+                        $sum: {
+                            $cond: [
+                                { $eq: ["$paymentStatus", "paid"] },
+                                "$totalAmount",
+                                0
+                            ]
+                        }
+                    },
                     totalOrders: { $sum: 1 },
+                    ordersCancelled: {
+                        $sum: {
+                            $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0]
+                        }
+                    },
+                    ordersRefunded: {
+                        $sum: {
+                            $cond: [{ $eq: ["$paymentStatus", "refunded"] }, 1, 0]
+                        }
+                    }
+
                 },
             },
             // Format output
@@ -96,6 +138,8 @@ Router.post('/revenue/month', async (req, res) => {
                     day: "$_id.day",
                     totalSales: 1,
                     totalOrders: 1,
+                    ordersCancelled:1,
+                    ordersRefunded:1,
                 },
             },
             { $sort: { day: 1 } },
@@ -109,6 +153,8 @@ Router.post('/revenue/month', async (req, res) => {
                     day: date,
                     totalSales: 0,
                     totalOrders: 0,
+                    ordersCancelled:0,
+                    ordersRefunded:0,
                 }
             );
         });

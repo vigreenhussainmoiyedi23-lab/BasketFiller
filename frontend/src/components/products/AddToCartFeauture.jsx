@@ -24,6 +24,7 @@ const AddToCartFeauture = ({stock,id}) => {
         } catch (error) {
             console.error("Error adding to cart:", error);
             if (error?.response?.data?.redirectTo) {
+                if(!confirm("Do YOu Want To Login And Continue"))return
                 navigate(error?.response?.data?.redirectTo)
             }
         }

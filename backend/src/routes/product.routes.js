@@ -14,7 +14,8 @@ const UserModel = require('../models/user.model')
 // Common Routes
 Router.get('/', ProductIndexHandler)
 Router.get('/featured', async (req, res) => {
-
+    const latestProducts = await productModel.find().sort({ createdAt: -1 }).limit(12)
+    let categories = []
     const token = req.cookies?.token
     if (!token) {
         const featuredProducts = await productModel.find().sort({ createdAt: -1 }).limit(12)
@@ -31,72 +32,44 @@ Router.get('/featured', async (req, res) => {
                 path: "products.product",
             },
         });
-    if (!user) {
+    if (!user || !user.CartItems.length > 0 || !user.Orders.length > 0) {
         const featuredProducts = await productModel.find().sort({ createdAt: -1 }).limit(12)
         return res.status(200).json({ message: "Here is the feauturedProducts", featuredProducts })
     }
     if (user.CartItems.length > 0) {
-        const categories = [...new Set(user.CartItems.map(item => item.product.categoury))];
-        const featuredProducts = await productModel.aggregate([
-            {
-                $match: { categoury: { $in: categories } }
-
-            }
-            , {
-                $addFields: {
-                    rating: { $ifNull: [{ $avg: "$comments.rating" }, 0] }
-                }
-            },
-            {
-                $addFields: {
-                    finalPrice: {
-                        $multiply: ["$price",
-                            {
-                                $divide: [{ $subtract: [100, "$discount"] }, 100]
-                            }]
-                    }
-                }
-            }
-            , {
-                $limit: 12
-            }
-        ])
-        return res.status(200).json({ message: "Here is the feauturedProducts", featuredProducts })
+        categories = [...new Set(user.CartItems.map(item => item.product.categoury))];
     }
     else if (user.Orders.length > 0) {
-        const [categories] = new Set(user.Orders.map(n=>n.order.products.map(item => item.product.categoury)));
-
-        const featuredProducts = await productModel.aggregate([
-            {
-                $match: { categoury: { $in: categories } }
-
-            }
-            , {
-                $addFields: {
-                    rating: { $ifNull: [{ $avg: "$comments.rating" }, 0] }
-                }
-            },
-            {
-                $addFields: {
-                    finalPrice: {
-                        $multiply: ["$price",
-                            {
-                                $divide: [{ $subtract: [100, "$discount"] }, 100]
-                            }]
-                    }
-                }
-            }
-            , {
-                $limit: 12
-            }
-        ])
-        return res.status(200).json({ message: "Here is the feauturedProducts", featuredProducts })
+        categories = new Set(user.Orders.map(n => n.order.products.map(item => item.product.categoury)));
     }
-    else {
-        const featuredProducts = await productModel.find().sort({ createdAt: -1 }).limit(12)
-        return res.status(200).json({ message: "Here is the feauturedProducts", featuredProducts })
-    }
+    let featuredProducts = await productModel.aggregate([
+        {
+            $match: { categoury: { $in: categories } }
 
+        }
+        , {
+            $addFields: {
+                rating: { $ifNull: [{ $avg: "$comments.rating" }, 0] }
+            }
+        },
+        {
+            $addFields: {
+                finalPrice: {
+                    $multiply: ["$price",
+                        {
+                            $divide: [{ $subtract: [100, "$discount"] }, 100]
+                        }]
+                }
+            }
+        }
+        , {
+            $limit: 12
+        }
+    ])
+    if (featuredProducts.length < 5) {
+        featuredProducts = [...featuredProducts, ...latestProducts.slice(-5 + featuredProducts.length)]
+    }
+    return res.status(200).json({ message: "Here is the feauturedProducts", featuredProducts })
 })
 
 Router.get('/categouryEnum', async (req, res) => {

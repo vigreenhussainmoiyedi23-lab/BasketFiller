@@ -11,9 +11,9 @@ import {
 } from "recharts";
 import { useMediaQuery } from "react-responsive";
 
-const MonthlyDetailChart = ({ data }) => {
+const MonthlyDetailChart = ({ data, month, year }) => {
   const isSmall = useMediaQuery({ maxWidth: 600 });
-
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   // Compute color scale bounds
   const { minValue, maxValue } = useMemo(() => {
     const values = data?.map((d) => d.totalSales) || [];
@@ -40,7 +40,7 @@ const MonthlyDetailChart = ({ data }) => {
           letterSpacing: "0.3px",
         }}
       >
-        Daily Performance - Current Month
+        Daily Performance - {months[month - 1]} {year}
       </h3>
 
       <ResponsiveContainer width="100%" height="100%">
@@ -124,6 +124,28 @@ const MonthlyDetailChart = ({ data }) => {
             name="Daily Orders"
             animationDuration={1000}
           />
+          <Line
+            type="monotone"
+            dataKey="ordersCancelled"
+            stroke="#22c55e"        // green for returns
+            strokeDasharray="3 3"
+            strokeWidth={2}
+            dot={false}
+            name="Orders Cancelled"
+            animationDuration={1000}
+          />
+
+          <Line
+            type="monotone"
+            dataKey="ordersRefunded"
+            stroke="#a855f7"        // purple for refunds
+            strokeDasharray="5 5"
+            strokeWidth={2}
+            dot={false}
+            name="Orders Refunded"
+            animationDuration={1000}
+          />
+
         </LineChart>
       </ResponsiveContainer>
     </div>

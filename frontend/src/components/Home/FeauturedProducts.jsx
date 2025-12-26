@@ -56,7 +56,6 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "../../FeaturedProducts.css"
 const FeaturedProducts = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -76,7 +75,7 @@ const FeaturedProducts = () => {
   }, []);
 
   return (
-    <div className="w-full py-14 text-white px-4">
+    <div className="w-full py-14 text-white px-4 my-4">
       <h2 className="text-center text-4xl sm:text-5xl font-bold mb-10">
         Featured <span className="text-purple-400">Products</span>
       </h2>
@@ -90,10 +89,10 @@ const FeaturedProducts = () => {
         autoplay={{ delay: 3500, disableOnInteraction: false }}
         loop={true}
         breakpoints={{
-          320: { slidesPerView: 0.5 },
-          640: { slidesPerView: 1.5 },
-          1024: { slidesPerView: 2.5 },
-          1280: { slidesPerView: 3.5 },
+          320: { slidesPerView: 1 },
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+          1280: { slidesPerView: 4 },
         }}
         className="pb-12"
       >
