@@ -7,7 +7,7 @@ const { isadmin } = require('../middlewares/AdminMiddleware')
 const { LoginValidator, validate } = require('../utils/express-validator')
 const UserModel = require('../models/user.model')
 const orderModel = require('../models/order.model')
-
+// order revenue related routes
 Router.post('/revenue/year', async (req, res) => {
     try {
         const year = parseInt(req.query.year) || new Date().getFullYear();
@@ -53,8 +53,8 @@ Router.post('/revenue/year', async (req, res) => {
                     month: "$_id.month",
                     totalSales: 1,
                     totalOrders: 1,
-                    ordersCancelled:1,
-                    ordersRefunded:1
+                    ordersCancelled: 1,
+                    ordersRefunded: 1
                 },
             },
             { $sort: { month: 1 } },
@@ -138,8 +138,8 @@ Router.post('/revenue/month', async (req, res) => {
                     day: "$_id.day",
                     totalSales: 1,
                     totalOrders: 1,
-                    ordersCancelled:1,
-                    ordersRefunded:1,
+                    ordersCancelled: 1,
+                    ordersRefunded: 1,
                 },
             },
             { $sort: { day: 1 } },
@@ -153,8 +153,8 @@ Router.post('/revenue/month', async (req, res) => {
                     day: date,
                     totalSales: 0,
                     totalOrders: 0,
-                    ordersCancelled:0,
-                    ordersRefunded:0,
+                    ordersCancelled: 0,
+                    ordersRefunded: 0,
                 }
             );
         });
@@ -172,6 +172,90 @@ Router.post('/revenue/month', async (req, res) => {
     }
 })
 
+// products related routes
+Router.get("/product/graph", async (req, res) => {
+    const { year, month, date } = req.body || { year: new Date().getFullYear(), month: new Date().getMonth() + 1, date: new Date().getDate() }
+
+    const CommonPipeline = [
+        {
+            $unwind: "$products"
+        },
+        {
+            $group: {
+                _id: "$products.product", // product ID
+                quantityPurchased: { $sum: "$products.quantity" }
+            }
+        },
+        // 🏆 sort descending by total quantity
+        {
+            $sort: { quantityPurchased: -1 }
+        },
+        // 🎯 keep only the top product
+        {
+            $limit: 1
+        },
+        // 🔗 lookup to fetch full product details
+        {
+            $lookup: {
+                from: "products",              // collection name (not model name)
+                localField: "_id",             // product ID from group
+                foreignField: "_id",           // matching field in products collection
+                as: "product"
+            }
+        },
+        {
+            $unwind: "$product"       // flatten product info
+        },
+        {
+            $project: {
+                _id: 0,
+                quantityPurchased: 1,
+                product: 1
+            }
+        }
+    ];
+    const { ForDay, ForMonth, ForYear } = {
+        ForYear: {
+            $match: {
+                $expr: {
+                    $eq: [{ $year: "$createdAt" }, Number(year)]
+                }
+            }
+        },
+        ForMonth: {
+            $match: {
+                $expr: {
+                    $and: [
+                        { $eq: [{ $year: "$createdAt" }, Number(year)] },
+                        { $eq: [{ $month: "$createdAt" }, Number(month)] },
+                    ],
+                }
+            }
+        },
+        ForDay: {
+            $match: {
+                $expr: {
+                    $and: [
+                        { $eq: [{ $year: "$createdAt" }, Number(year)] },
+                        { $eq: [{ $month: "$createdAt" }, Number(month)] },
+                        { $eq: [{ $dayOfMonth: "$createdAt" }, Number(date)] },
+                    ],
+                }
+            }
+        },
+    }
+    let [productOfTheYear] = await orderModel.aggregate([ForYear, ...CommonPipeline]) || null
+    let [productOfTheMonth] = await orderModel.aggregate([ForMonth, ...CommonPipeline]) || null
+    let [productOfTheDay] = await orderModel.aggregate([ForDay, ...CommonPipeline]) || null
+    if (!productOfTheDay) productOfTheDay = null
+    if (!productOfTheMonth) productOfTheMonth = null
+    if (!productOfTheYear) productOfTheYear = null
+
+    res.send({ productOfTheDay, productOfTheMonth, productOfTheYear })
+})
+
+
+// User related routes
 Router.get('/all', async function GetAllUserHandler(req, res) {
     try {
 
@@ -213,6 +297,7 @@ Router.post('/user/unban/:id', async function GetAllUserHandler(req, res) {
     }
 });
 
+// auhtentication of admin
 Router.post('/login', LoginValidator, validate, async (req, res) => {
     const { email, password } = req.body
     const admin = await adminModel.findOne({ email }).lean()
