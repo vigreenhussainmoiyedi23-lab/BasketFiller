@@ -176,44 +176,58 @@ Router.post('/revenue/month', async (req, res) => {
 Router.get("/product/graph", async (req, res) => {
     const { year, month, date } = req.body || { year: new Date().getFullYear(), month: new Date().getMonth() + 1, date: new Date().getDate() }
 
-    const CommonPipeline = [
-        {
-            $unwind: "$products"
+   const CommonPipeline = [
+  { $unwind: "$products" },
+  {
+    $group: {
+      _id: "$products.product",
+      quantityPurchased: { $sum: "$products.quantity" },
+    },
+  },
+  { $sort: { quantityPurchased: -1 } },
+  { $limit: 1 },
+  {
+    $lookup: {
+      from: "products",
+      localField: "_id",
+      foreignField: "_id",
+      as: "product",
+    },
+  },
+  { $unwind: "$product" },
+  // 🧩 compute rating and final price inside product
+  {
+    $addFields: {
+      "product.rating": {
+        $cond: {
+          if: { $gt: [{ $size: "$product.comments" }, 0] },
+          then: { $avg: "$product.comments.rating" },
+          else: 0,
         },
-        {
-            $group: {
-                _id: "$products.product", // product ID
-                quantityPurchased: { $sum: "$products.quantity" }
-            }
-        },
-        // 🏆 sort descending by total quantity
-        {
-            $sort: { quantityPurchased: -1 }
-        },
-        // 🎯 keep only the top product
-        {
-            $limit: 1
-        },
-        // 🔗 lookup to fetch full product details
-        {
-            $lookup: {
-                from: "products",              // collection name (not model name)
-                localField: "_id",             // product ID from group
-                foreignField: "_id",           // matching field in products collection
-                as: "product"
-            }
-        },
-        {
-            $unwind: "$product"       // flatten product info
-        },
-        {
-            $project: {
-                _id: 0,
-                quantityPurchased: 1,
-                product: 1
-            }
-        }
-    ];
+      },
+      "product.finalPrice": {
+        $round: [
+          {
+            $multiply: [
+              "$product.price",
+              { $divide: [{ $subtract: [100, "$product.discount"] }, 100] },
+            ],
+          },
+          0, // round to nearest integer
+        ],
+      },
+    },
+  },
+
+  {
+    $project: {
+      _id: 0,
+      quantityPurchased: 1,
+      product: 1,
+    },
+  },
+];
+
     const { ForDay, ForMonth, ForYear } = {
         ForYear: {
             $match: {

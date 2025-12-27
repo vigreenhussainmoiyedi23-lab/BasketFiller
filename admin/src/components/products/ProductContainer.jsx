@@ -18,7 +18,7 @@ const ProductContainer = ({reload}) => {
         {(products && products.length > 0) ? products.map(product => {
           return <ProductCard key={product._id} id={product._id} product={product} reload={reload}/>
         }) :
-          <h1>There are no products yet</h1>}
+          <h1 className='text-zinc-800 font-bold text-xl animate-pulse'>Loading Products</h1>}
       </div>
     </>
   )
