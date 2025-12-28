@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
-import Sidebar from '../../components/common/Sidebar'
-import Navbar from '../../components/common/Navbar'
-import ProductContainer from '../../components/products/ProductContainer'
-import CreateProduct from '../../components/products/CreateProduct'
-
+import React, { useState } from "react";
+import Sidebar from "../../components/common/Sidebar";
+import Navbar from "../../components/common/Navbar";
+import ProductContainer from "../../components/products/ProductContainer";
+import CreateProduct from "../../components/products/CreateProduct";
 
 const Products = () => {
-const [reload, setReload] = useState(0)
+  const [reload, setReload] = useState(0);
+
   return (
-    <div className='w-full min-h-screen relative '>
+    <div className="w-full min-h-screen relative ">
       <Sidebar />
       <Navbar />
-      <div className=' md:w-[calc(100vw-256px)] md:top-0 top-[10vh] min-h-screen bg-gray-200 w-full absolute right-0'>
-        <CreateProduct reload={setReload}/>
-        <ProductContainer reload={setReload}/>
+      <div className=" md:w-[calc(100vw-256px)] md:top-0 top-[10vh] min-h-screen bg-gray-200 w-full absolute right-0">
+        <CreateProduct reload={setReload} />
+        <ProductContainer reload={setReload} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;

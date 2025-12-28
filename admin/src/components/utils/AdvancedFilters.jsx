@@ -1,37 +1,38 @@
+
 import React from "react";
 import { X } from "lucide-react";
 
 const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => {
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-zinc-900 w-11/12 max-w-md rounded-xl shadow-2xl p-6 relative border border-zinc-700">
+    <div className="fixed inset-0 z-50 flex justify-center items-center bg-black/40 backdrop-blur-sm">
+      <div className="bg-white w-11/12 max-w-md rounded-xl shadow-2xl p-6 relative border border-gray-200">
         {/* ❌ Close Button */}
         <button
           onClick={toggleAdvanced}
-          className="absolute top-3 right-3 text-zinc-400 hover:text-red-500 transition"
+          className="absolute top-3 right-3 text-gray-500 hover:text-red-500 transition"
         >
           <X size={20} />
         </button>
 
         {/* Header */}
-        <h3 className="text-lg font-semibold text-zinc-100 mb-4">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">
           Advanced Filters
         </h3>
 
         <div className="flex flex-col gap-4">
           {/* 🧩 Category */}
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Category</label>
+            <label className="block text-sm text-gray-600 mb-1">Category</label>
             <select
               value={filter.category}
               onChange={(e) =>
                 setFilter({
                   ...filter,
                   category: e.target.value,
-                  page: 1,
+                  page: 1, // reset page when filter changes
                 })
               }
-              className="w-full outline-none px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm focus:ring-2 focus:ring-indigo-500"
+              className="w-full outline-none px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">All Categories</option>
               {categouries.map((c, i) => (
@@ -45,7 +46,7 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
           {/* 💰 Price Range */}
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="block text-sm text-zinc-400 mb-1">
+              <label className="block text-sm text-gray-600 mb-1">
                 Min Price
               </label>
               <input
@@ -60,12 +61,12 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
                 }
                 max={filter.maxPrice}
                 placeholder="0"
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
             <div className="flex-1">
-              <label className="block text-sm text-zinc-400 mb-1">
+              <label className="block text-sm text-gray-600 mb-1">
                 Max Price
               </label>
               <input
@@ -80,14 +81,14 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
                 }
                 min={filter.minPrice}
                 placeholder="100000"
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm placeholder:text-zinc-500 outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 text-sm placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
           </div>
 
           {/* 🏷️ Sort By */}
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Sort By</label>
+            <label className="block text-sm text-gray-600 mb-1">Sort By</label>
             <select
               value={filter.sortBy}
               onChange={(e) =>
@@ -97,7 +98,7 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
                   page: 1,
                 })
               }
-              className="w-full outline-none px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm focus:ring-2 focus:ring-indigo-500"
+              className="w-full outline-none px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 text-sm focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">Default</option>
               <option value="price-asc">Price: Low to High</option>
@@ -109,7 +110,7 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
 
           {/* 🧮 Rating Filter */}
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">
+            <label className="block text-sm text-gray-600 mb-1">
               Minimum Rating
             </label>
             <input
@@ -127,7 +128,7 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
               }
               className="w-full accent-indigo-600"
             />
-            <p className="text-sm text-zinc-400 mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               {filter.rating} ⭐ & above
             </p>
           </div>
@@ -146,7 +147,7 @@ const AdvancedFilters = ({ toggleAdvanced, filter, setFilter, categouries }) => 
               }
               className="w-4 h-4 accent-indigo-600"
             />
-            <label className="text-sm text-zinc-300 select-none">
+            <label className="text-sm text-gray-700 select-none">
               Show only in-stock products
             </label>
           </div>

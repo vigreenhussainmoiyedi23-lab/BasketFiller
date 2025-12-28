@@ -32,13 +32,16 @@ async function ProductMoreHandler(req, res) {
 
 async function FilterHandler(req, res) {
   try {
-    const { priceRange, sort, category, search, page } = req.body || {
-      priceRange: null,
-      sort: null,
-      category: null,
-      search: null,
-      page: 0,
-    };
+    const {
+      minPrice,
+      maxPrice,
+      sortBy,
+      category,
+      search,
+      page,
+      instock,
+      rating,
+    } = req.body;
     const pipeline = [];
     let limit = 10;
     let skip = 0;
@@ -57,55 +60,94 @@ async function FilterHandler(req, res) {
         },
       });
     }
-
+    // adding two virtual feilds
     pipeline.push({
       $addFields: {
         finalPrice: {
-          $multiply: [
-            "$price",
+          $round: [
             {
-              $divide: [{ $subtract: [100, "$discount"] }, 100],
+              $multiply: [
+                "$price",
+                {
+                  $divide: [{ $subtract: [100, "$discount"] }, 100],
+                },
+              ],
             },
+            2,
           ],
         },
       },
     });
     pipeline.push({
       $addFields: {
-        rating: { $ifNull: [{ $avg: "$comments.rating" }, 0] },
+        rating: { $round: [{ $ifNull: [{ $avg: "$comments.rating" }, 0] }, 2] },
       },
     });
 
-    if (priceRange) {
-      let [min, max] = priceRange;
-      if (!max) max = 100000;
-      if (!min) min = 0;
+    if (minPrice) {
+      let min = minPrice;
+      if (!minPrice) min = 0;
       pipeline.push({
         $match: {
           finalPrice: {
             $gte: min,
+          },
+        },
+      });
+    }
+    if (maxPrice) {
+      let max = maxPrice;
+      if (!maxPrice) max = 100000;
+      pipeline.push({
+        $match: {
+          finalPrice: {
             $lte: max,
           },
         },
       });
     }
-
-    if (sort) {
-      if (sort === "lowToHigh") {
+    if (sortBy) {
+      console.log(sortBy);
+      if (sortBy === "price-asc") {
         pipeline.push({
           $sort: {
             finalPrice: 1,
           },
         });
-      } else {
+      } else if (sortBy === "price-desc") {
         pipeline.push({
           $sort: {
             finalPrice: -1,
           },
         });
+      } else if (sortBy === "rating-desc") {
+        pipeline.push({
+          $sort: {
+            rating: -1,
+          },
+        });
+      } else {
+        pipeline.push({
+          $sort: {
+            createdAt: -1,
+          },
+        });
       }
     }
-
+    if (instock) {
+      pipeline.push({
+        $match: {
+          stock: { $gt: 0 },
+        },
+      });
+    }
+    if (rating) {
+      pipeline.push({
+        $match: {
+          rating: { $gte: rating },
+        },
+      });
+    }
     pipeline.push({
       $skip: skip,
     });
@@ -114,13 +156,11 @@ async function FilterHandler(req, res) {
     });
     const products = await productModel.aggregate(pipeline);
     const totalProducts = await productModel.countDocuments(pipeline);
-    res
-      .status(200)
-      .json({
-        message: "Filtered results",
-        totalPages: Math.ceil(totalProducts / limit),
-        products,
-      });
+    res.status(200).json({
+      message: "Filtered results",
+      totalPages: Math.ceil(totalProducts / limit),
+      products,
+    });
   } catch (error) {
     res
       .status(500)

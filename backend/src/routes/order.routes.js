@@ -28,14 +28,23 @@ Router.get("/admin/:orderId", isadmin, async (req, res) => {
 });
 Router.post("/", async (req, res) => {
   const { orderStatus, paymentStatus } = req.body;
+  let orders;
   if (orderStatus && paymentStatus) {
-    const orders = await orderModel
+    orders = await orderModel
       .find({ orderStatus, paymentStatus })
       .populate("products.product");
-    return res.status(200).json({ messgae: "all orders", orders });
+  } else if (!orderStatus && paymentStatus) {
+    orders = await orderModel
+      .find({ paymentStatus })
+      .populate("products.product");
   }
-  
-  const orders = await orderModel.find().populate("products.product");
+   else if (orderStatus && !paymentStatus) {
+    orders = await orderModel
+      .find({ orderStatus })
+      .populate("products.product");
+  }else{
+    orders = await orderModel.find().populate("products.product");
+  }
   return res.status(200).json({ messgae: "all orders", orders });
 });
 Router.get("/user", UserCanAcces, async (req, res) => {

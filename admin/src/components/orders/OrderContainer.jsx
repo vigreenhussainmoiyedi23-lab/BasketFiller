@@ -3,8 +3,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import OrderCard from "./OrderCard";
 const OrderContainer = () => {
   const [orderDets, setOrderDets] = useState({
-    orderStatus: null,
-    paymentStatus: null,
+    orderStatus: "",
+    paymentStatus: "",
   });
   const [orders, setOrders] = useState([]);
   const getAllOrders = async (e) => {
@@ -24,11 +24,8 @@ const OrderContainer = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (orderDets.paymentStatus && orderDets.orderStatus) {
             getAllOrders();
-          } else {
-            alert("Both the things must be picked");
-          }
+
         }}
         className="flex flex-wrap gap-3 mb-4 justify-between w-full h-max px-5 py-2 items-center"
       >
@@ -42,10 +39,10 @@ const OrderContainer = () => {
               onChange={(e) =>
                 setOrderDets({ ...orderDets, paymentStatus: e.target.value })
               }
-              required
+              
               id="paymentStatus"
             >
-              <option value={null}>select Payment Status</option>
+              <option value="">All </option>
               <option value="paid">paid</option>
               <option value="pending">pending</option>
               <option value="refunded">refunded</option>
@@ -61,10 +58,10 @@ const OrderContainer = () => {
               onChange={(e) =>
                 setOrderDets({ ...orderDets, orderStatus: e.target.value })
               }
-              required
+              
               id="orderStatus"
             >
-              <option value={null}>select Order Status</option>
+              <option value="">All</option>
               <option value="placed">placed</option>
               <option value="shipped">shipped</option>
               <option value="cancelled">cancelled</option>
