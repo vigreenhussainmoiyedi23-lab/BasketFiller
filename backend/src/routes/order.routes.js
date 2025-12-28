@@ -23,6 +23,7 @@ Router.get("/admin/:orderId", isadmin, async (req, res) => {
 })
 Router.get("/", async (req, res) => {
   const orders = await orderModel.find().populate("products.product")
+  console.log(orders)
   return res.status(200).json({ messgae: "all orders", orders })
 })
 Router.get("/user", UserCanAcces, async (req, res) => {

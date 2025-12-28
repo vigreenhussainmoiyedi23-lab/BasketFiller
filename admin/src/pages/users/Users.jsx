@@ -23,6 +23,9 @@ const Users = () => {
       await axiosInstance.post(`/admin/user/ban/${id}`);
       setUserStatusChanged((prev) => prev + 1);
     } catch (error) {
+      if (error.status==403 || error.status==401) {
+        alert("Admin Only Feature")
+      }
       console.log(error);
     }
   }
