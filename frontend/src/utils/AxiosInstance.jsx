@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl="http://localhost:5000"
+const baseurl = "https://basketfiller.onrender.com";
 const axiosInstance = axios.create({
   baseURL: `${baseurl}/api`, // 👈 your backend base URL
   withCredentials: true, // 👈 allows sending cookies (for auth)
