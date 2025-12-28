@@ -9,7 +9,6 @@ import { Link, useNavigate } from "react-router-dom";
 const OrderCard = ({ order }) => {
   const [status, setStatus] = useState(order.orderStatus);
   const navigate = useNavigate();
-
   const updateStatus = async (newStatus) => {
     try {
       await axiosInstance.post(`/order/update/${order._id}/${newStatus}`);
@@ -46,12 +45,13 @@ const OrderCard = ({ order }) => {
 
   return (
     <div
-      className={`bg-white border rounded-xl shadow-md hover:shadow-lg transition-all mb-6 overflow-hidden ${status === "delivered"
-        ? "border-green-400"
-        : status === "cancelled"
+      className={`bg-white border rounded-xl shadow-md hover:shadow-lg transition-all mb-6 overflow-hidden ${
+        status === "delivered"
+          ? "border-green-400"
+          : status === "cancelled"
           ? "border-red-400 opacity-80"
           : "border-gray-200"
-        }`}
+      }`}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-gray-50 px-5 py-4 border-b gap-2">
@@ -69,14 +69,15 @@ const OrderCard = ({ order }) => {
           </p>
         </div>
         <span
-          className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium mt-1 sm:mt-0 ${status === "delivered"
-            ? "bg-green-100 text-green-700"
-            : status === "shipped"
+          className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium mt-1 sm:mt-0 ${
+            status === "delivered"
+              ? "bg-green-100 text-green-700"
+              : status === "shipped"
               ? "bg-blue-100 text-blue-700"
               : status === "cancelled"
-                ? "bg-red-100 text-red-700"
-                : "bg-yellow-100 text-yellow-700"
-            }`}
+              ? "bg-red-100 text-red-700"
+              : "bg-yellow-100 text-yellow-700"
+          }`}
         >
           {status.toUpperCase()}
         </span>
@@ -150,7 +151,8 @@ const OrderCard = ({ order }) => {
             </p>
             <p>
               <span className="font-semibold text-gray-900">Phone:</span>{" "}
-              {order.phoneNumber.toString().slice(0, 2)}XXXXX{order.phoneNumber.toString().slice(-3)}
+              {order.phoneNumber.toString().slice(0, 2)}XXXXX
+              {order.phoneNumber.toString().slice(-3)}
             </p>
             <p>
               <span className="font-semibold text-gray-900">Payment:</span>{" "}
@@ -166,10 +168,13 @@ const OrderCard = ({ order }) => {
 
       {/* Action Buttons */}
       <div className="flex flex-wrap justify-end gap-3 px-5 py-4 bg-gray-50 border-t">
-        <Link to={`/order/${order._id}`}
-         className="bg-gray-500 text-gray-100 font-bold px-3 py-2 rounded-4xl">
-          View details</Link>
-      
+        <Link
+          to={`/order/${order._id}`}
+          className="bg-gray-500 text-gray-100 font-bold px-3 py-2 rounded-4xl"
+        >
+          View details
+        </Link>
+
         {status === "placed" && (
           <>
             <button
@@ -186,13 +191,16 @@ const OrderCard = ({ order }) => {
             </button>
           </>
         )}
-        {(status === "cancelled" && order.paymentStatus === "pending") ? <button
-          onClick={() => refundOrder()}
-          className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition"
-        >
-         Refund Money
-        </button>
-          : ""}
+        {status === "cancelled" && order.paymentStatus === "pending" ? (
+          <button
+            onClick={() => refundOrder()}
+            className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition"
+          >
+            Refund Money
+          </button>
+        ) : (
+          ""
+        )}
         {status === "shipped" && (
           <button
             onClick={() => updateStatus("delivered")}
@@ -206,14 +214,14 @@ const OrderCard = ({ order }) => {
             ✅ Delivered
           </span>
         )}
-        {status === "cancelled" && order.paymentStatus==="pending" && (
+        {status === "cancelled" && order.paymentStatus === "pending" && (
           <span className="text-red-600 font-semibold text-sm flex items-center gap-1">
-            ❌ Cancelled 
+            ❌ Cancelled
           </span>
         )}
-        {status === "cancelled" && order.paymentStatus==="refunded" && (
+        {status === "cancelled" && order.paymentStatus === "refunded" && (
           <span className="text-green-600 font-semibold text-sm flex items-center gap-1">
-           Money Refunded 
+            Money Refunded
           </span>
         )}
       </div>

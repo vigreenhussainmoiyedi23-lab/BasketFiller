@@ -58,7 +58,7 @@ productSchema.virtual('rating').get(function () {
         return acc + val.rating
     }, 0);
     const Length = (this.comments.length > 0) ? this.comments.length : 1;
-    return (sum / Length).toFixed(2)
+    return (sum / Length)
 });
 
 const productModel = mongoose.model('product', productSchema)

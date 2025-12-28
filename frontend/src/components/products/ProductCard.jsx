@@ -66,7 +66,7 @@ const ProductCard = ({ product }) => {
         {/* 🖼️ Product Image */}
         <div
           style={{ perspective: "300px" }}
-          className="w-full  h-50 overflow-hidden hover:h-full hover:absolute hover:top-0 z-50"
+          className="w-full  h-50 overflow-hidden  z-50"
           onMouseEnter={handleMouseEnter}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -90,7 +90,7 @@ const ProductCard = ({ product }) => {
           {/* 💰 Price Section */}
           <div className="flex items-center justify-between mb-4 flex-wrap min-h-max h-20">
             <div className="flex flex-col">
-              <span className="text-[yellow] text-lg font-semibold mr-2">₹{finalPrice}</span>
+              <span className="text-[yellow] text-lg font-semibold mr-2">₹{Math.round(finalPrice)}</span>
               {discount !== 0 && (
                 <span className="text-red-500 line-through text-sm">₹{price}</span>
               )}

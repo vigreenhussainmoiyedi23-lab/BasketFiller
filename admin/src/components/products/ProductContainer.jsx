@@ -4,8 +4,9 @@ import axiosInstance from '../../utils/axiosInstance'
 
 const ProductContainer = ({reload}) => {
   const [products, setProducts] = useState([])
+ 
   async function GetProducts() {
-    const result = await axiosInstance.get('/product')
+    const result = await axiosInstance.post('/product')
     if (result.data.products) setProducts(result.data.products)
   }
   useEffect(() => {

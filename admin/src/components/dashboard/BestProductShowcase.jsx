@@ -36,7 +36,7 @@ const BestProductShowcase = ({ productOfTheDay, productOfTheMonth, productOfTheY
                 <h3 className="text-lg font-bold text-gray-800 line-clamp-1">
                   {p.product.title}
                 </h3>
-                <p className="text-gray-500 text-sm line-clamp-2">{product.description}</p>
+                <p className="text-gray-500 text-sm line-clamp-2">{p.product.description}</p>
 
                 {/* 💰 Price and Stats */}
                 <div className="flex justify-center items-center flex-wrap gap-2 mt-2">
