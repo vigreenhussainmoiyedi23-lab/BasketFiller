@@ -6,8 +6,8 @@ const cookieParser = require("cookie-parser");
 
 // requiring Middlewares
 const { UserCanAcces } = require("./middlewares/AuthenticationMiddleware");
-const adminUrl = "https://basket-filler.vercel.app/";
-const userUrl = "https://basket-filler-ixng.vercel.app/";
+const adminUrl = "https://basket-filler.vercel.app";
+const userUrl = "https://basket-filler-ixng.vercel.app";
 
 // _______requiring all the routers____
 const authRoutes = require("./routes/auth.routes");
