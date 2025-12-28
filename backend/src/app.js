@@ -21,7 +21,16 @@ const commentRoutes = require("./routes/comments.routes");
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ origin: [adminUrl, userUrl], credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || [adminUrl, userUrl, "http://localhost:3000"].includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
 
 //_______routes_______
 app.use("/api/auth", authRoutes);
