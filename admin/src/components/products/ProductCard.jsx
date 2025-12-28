@@ -1,23 +1,23 @@
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axiosInstance from "../../utils/axiosInstance";
 
 const ProductCard = ({ id, reload, product }) => {
-  const { title, thumbnail, price, discount, description, stock } = product
+  const { title, thumbnail, price, discount, description, stock } = product;
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   setTimeout(() => {
-    setIsLoading(false)
+    setIsLoading(false);
   }, 3000);
   const deleteHandler = async () => {
     if (!confirm("Are you sure you want to delete this product")) {
-      return
+      return;
     }
     try {
-      const result = await axiosInstance.get(`/product/delete/${id}`)
-      reload(prev => prev + 1)
+      await axiosInstance.get(`/product/delete/${id}`);
+      reload((prev) => prev + 1);
     } catch (error) {
       const data = error?.response?.data;
 
@@ -28,7 +28,7 @@ const ProductCard = ({ id, reload, product }) => {
         return navigate(data.redirectTo);
       }
     }
-  }
+  };
   return (
     <div className="rounded-md hover:scale-110 hover:z-9 hover:border-2 hover:shadow-2xl hover:shadow-black/30 hover:border-blue-300 transition-all duration-175 ease-linear self-center shadow-md drop-shadow-2xl shadow-black/50 h-max mx-auto min-h-75 w-full sm:max-w-md max-w-100  px-5 py-2 bg-white backdrop-blur-3xl overflow-hidden">
       {/* 🖼️ Image */}
@@ -40,8 +40,9 @@ const ProductCard = ({ id, reload, product }) => {
           loading="lazy"
           onLoad={() => setIsLoading(false)}
           onError={(e) => console.error("❌ Image failed to load:", e)}
-          className={`absolute top-0 left-0 w-full h-full object-cover rounded-md transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"
-            }`}
+          className={`absolute top-0 left-0 w-full h-full object-cover rounded-md transition-opacity duration-300 ${
+            isLoading ? "opacity-0" : "opacity-100"
+          }`}
         />
       </div>
 
@@ -60,14 +61,28 @@ const ProductCard = ({ id, reload, product }) => {
       ) : (
         <div className="flex items-center justify-around text-xl h-max mt-1">
           <h1 className="text-yellow-500 font-semibold">
-            {discount > 0 ? <><span className="line-through text-red-600 text-sm text-center">₹{price}</span> <br /></> : ''}
-
-            ₹{price * (100 - discount) / 100}
+            {discount > 0 ? (
+              <>
+                <span className="line-through text-red-600 text-sm text-center">
+                  ₹{price}
+                </span>{" "}
+                <br />
+              </>
+            ) : (
+              ""
+            )}
+            ₹{(price * (100 - discount)) / 100}
           </h1>
           <p className="text-sm font-semibold text-gray-100 bg-gray-600 tracking-tighter overflow-hidden py-2 px-3 w-max h-max rounded-lg mt-2">
             {stock} left
           </p>
-          {discount > 0 ? <h1 className="text-white font-semibold bg-red-500 rounded-[calc(50%+5px)] p-2  min-h-max">{discount}%</h1> : ""}
+          {discount > 0 ? (
+            <h1 className="text-white font-semibold bg-red-500 rounded-[calc(50%+5px)] p-2  min-h-max">
+              {discount}%
+            </h1>
+          ) : (
+            ""
+          )}
         </div>
       )}
 

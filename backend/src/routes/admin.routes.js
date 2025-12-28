@@ -1,345 +1,380 @@
-const express = require('express')
-const adminModel = require('../models/admin.model')
-const { HashPassword, comparePassword } = require('../utils/bcrypt')
-const { GenerateToken } = require('../utils/jwt')
-const Router = express.Router()
-const { isadmin } = require('../middlewares/AdminMiddleware')
-const { LoginValidator, validate } = require('../utils/express-validator')
-const UserModel = require('../models/user.model')
-const orderModel = require('../models/order.model')
+const express = require("express");
+const adminModel = require("../models/admin.model");
+const { HashPassword, comparePassword } = require("../utils/bcrypt");
+const { GenerateToken } = require("../utils/jwt");
+const Router = express.Router();
+const { isadmin } = require("../middlewares/AdminMiddleware");
+const { LoginValidator, validate } = require("../utils/express-validator");
+const UserModel = require("../models/user.model");
+const orderModel = require("../models/order.model");
 // order revenue related routes
-Router.post('/revenue/year', async (req, res) => {
-    try {
-        const year = parseInt(req.query.year) || new Date().getFullYear();
+Router.post("/revenue/year", async (req, res) => {
+  try {
+    const year = parseInt(req.query.year) || new Date().getFullYear();
 
-        const data = await orderModel.aggregate([
-            // Match only orders from that year
-            {
-                $match: {
-                    $expr: { $eq: [{ $year: "$createdAt" }, year] },
-                },
+    const data = await orderModel.aggregate([
+      // Match only orders from that year
+      {
+        $match: {
+          $expr: { $eq: [{ $year: "$createdAt" }, year] },
+        },
+      },
+      // Group by month number
+      {
+        $group: {
+          _id: { month: { $month: "$createdAt" } },
+          totalSales: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "paid"] }, "$totalAmount", 0],
             },
-            // Group by month number
-            {
-                $group: {
-                    _id: { month: { $month: "$createdAt" } },
-                    totalSales: {
-                        $sum: {
-                            $cond: [
-                                { $eq: ["$paymentStatus", "paid"] },
-                                "$totalAmount",
-                                0
-                            ]
-                        }
-                    },
-                    totalOrders: { $sum: 1 },
-                    ordersCancelled: {
-                        $sum: {
-                            $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0]
-                        }
-                    },
-                    ordersRefunded: {
-                        $sum: {
-                            $cond: [{ $eq: ["$paymentStatus", "refunded"] }, 1, 0]
-                        }
-                    }
-                }
+          },
+          totalOrders: { $sum: 1 },
+          ordersCancelled: {
+            $sum: {
+              $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0],
             },
-
-            // Format output
-            {
-                $project: {
-                    _id: 0,
-                    month: "$_id.month",
-                    totalSales: 1,
-                    totalOrders: 1,
-                    ordersCancelled: 1,
-                    ordersRefunded: 1
-                },
+          },
+          ordersRefunded: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "refunded"] }, 1, 0],
             },
-            { $sort: { month: 1 } },
-        ]);
+          },
+        },
+      },
 
-        // Fill missing months with zero
-        const allMonths = Array.from({ length: 12 }, (_, i) => i + 1);
-        const completeData = allMonths.map((m) => {
-            const found = data.find((d) => d.month === m);
-            return (
-                found || {
-                    month: m,
-                    totalSales: 0,
-                    totalOrders: 0,
-                    ordersCancelled: 0,
-                    ordersRefunded: 0,
-                }
-            );
-        });
+      // Format output
+      {
+        $project: {
+          _id: 0,
+          month: "$_id.month",
+          totalSales: 1,
+          totalOrders: 1,
+          ordersCancelled: 1,
+          ordersRefunded: 1,
+        },
+      },
+      { $sort: { month: 1 } },
+    ]);
 
-        res.status(200).json({
-            success: true,
-            year,
-            monthlyStats: completeData,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error generating monthly stats" });
-    }
-})
-Router.post('/revenue/month', async (req, res) => {
-    try {
-        const { month, year } = req.body || { month: new Date().getMonth() + 1, year: new Date().getFullYear() };
-        const allDays = Array.from({
-            length: parseInt(new Date(year, month + 1, 0).getDate())
-        }, (_, i) => i + 1);
+    // Fill missing months with zero
+    const allMonths = Array.from({ length: 12 }, (_, i) => i + 1);
+    const completeData = allMonths.map((m) => {
+      const found = data.find((d) => d.month === m);
+      return (
+        found || {
+          month: m,
+          totalSales: 0,
+          totalOrders: 0,
+          ordersCancelled: 0,
+          ordersRefunded: 0,
+        }
+      );
+    });
 
-        const data = await orderModel.aggregate([
-            // Match only orders from that year
-            {
-                $match: {
-                    $expr: {
-                        $and: [
-                            { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
-                            { $eq: [{ $year: "$createdAt" }, parseInt(year)] }
-                        ]
-                    }
-                },
+    res.status(200).json({
+      success: true,
+      year,
+      monthlyStats: completeData,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error generating monthly stats" });
+  }
+});
+Router.post("/revenue/month", async (req, res) => {
+  try {
+    const { month, year } = req.body || {
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+    };
+    const allDays = Array.from(
+      {
+        length: parseInt(new Date(year, month + 1, 0).getDate()),
+      },
+      (_, i) => i + 1
+    );
+
+    const data = await orderModel.aggregate([
+      // Match only orders from that year
+      {
+        $match: {
+          $expr: {
+            $and: [
+              { $eq: [{ $month: "$createdAt" }, parseInt(month)] },
+              { $eq: [{ $year: "$createdAt" }, parseInt(year)] },
+            ],
+          },
+        },
+      },
+      // Group by month number
+      {
+        $group: {
+          _id: { day: { $dayOfMonth: "$createdAt" } },
+          totalSales: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "paid"] }, "$totalAmount", 0],
             },
-            // Group by month number
-            {
-                $group: {
-                    _id: { day: { $dayOfMonth: "$createdAt" } },
-                    totalSales: {
-                        $sum: {
-                            $cond: [
-                                { $eq: ["$paymentStatus", "paid"] },
-                                "$totalAmount",
-                                0
-                            ]
-                        }
-                    },
-                    totalOrders: { $sum: 1 },
-                    ordersCancelled: {
-                        $sum: {
-                            $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0]
-                        }
-                    },
-                    ordersRefunded: {
-                        $sum: {
-                            $cond: [{ $eq: ["$paymentStatus", "refunded"] }, 1, 0]
-                        }
-                    }
-
-                },
+          },
+          totalOrders: { $sum: 1 },
+          ordersCancelled: {
+            $sum: {
+              $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0],
             },
-            // Format output
-            {
-                $project: {
-                    _id: 0,
-                    day: "$_id.day",
-                    totalSales: 1,
-                    totalOrders: 1,
-                    ordersCancelled: 1,
-                    ordersRefunded: 1,
-                },
+          },
+          ordersRefunded: {
+            $sum: {
+              $cond: [{ $eq: ["$paymentStatus", "refunded"] }, 1, 0],
             },
-            { $sort: { day: 1 } },
-        ]);
-        // Fill missing months with zero
+          },
+        },
+      },
+      // Format output
+      {
+        $project: {
+          _id: 0,
+          day: "$_id.day",
+          totalSales: 1,
+          totalOrders: 1,
+          ordersCancelled: 1,
+          ordersRefunded: 1,
+        },
+      },
+      { $sort: { day: 1 } },
+    ]);
+    // Fill missing months with zero
 
-        const completeData = allDays.map((date) => {
-            const found = data.find((d) => d.day === date);
-            return (
-                found || {
-                    day: date,
-                    totalSales: 0,
-                    totalOrders: 0,
-                    ordersCancelled: 0,
-                    ordersRefunded: 0,
-                }
-            );
-        });
+    const completeData = allDays.map((date) => {
+      const found = data.find((d) => d.day === date);
+      return (
+        found || {
+          day: date,
+          totalSales: 0,
+          totalOrders: 0,
+          ordersCancelled: 0,
+          ordersRefunded: 0,
+        }
+      );
+    });
 
-        res.status(200).json({
-            success: true,
-            year,
-            month,
-            data,
-            DailyStatus: completeData,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Error generating Daily stats", err });
-    }
-})
+    res.status(200).json({
+      success: true,
+      year,
+      month,
+      data,
+      DailyStatus: completeData,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error generating Daily stats", err });
+  }
+});
 
 // products related routes
 Router.get("/product/graph", async (req, res) => {
-    const { year, month, date } = req.body || { year: new Date().getFullYear(), month: new Date().getMonth() + 1, date: new Date().getDate() }
+  const { year, month, date } = req.body || {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    date: new Date().getDate(),
+  };
 
-   const CommonPipeline = [
-  { $unwind: "$products" },
-  {
-    $group: {
-      _id: "$products.product",
-      quantityPurchased: { $sum: "$products.quantity" },
-    },
-  },
-  { $sort: { quantityPurchased: -1 } },
-  { $limit: 1 },
-  {
-    $lookup: {
-      from: "products",
-      localField: "_id",
-      foreignField: "_id",
-      as: "product",
-    },
-  },
-  { $unwind: "$product" },
-  // 🧩 compute rating and final price inside product
-  {
-    $addFields: {
-      "product.rating": {
-        $cond: {
-          if: { $gt: [{ $size: "$product.comments" }, 0] },
-          then: { $avg: "$product.comments.rating" },
-          else: 0,
+  const CommonPipeline = [
+    {
+      $match: {
+        orderStatus: {
+          $in: ["placed", "shipped", "delivered"],
         },
       },
-      "product.finalPrice": {
-        $round: [
-          {
-            $multiply: [
-              "$product.price",
-              { $divide: [{ $subtract: [100, "$product.discount"] }, 100] },
-            ],
+    },
+    { $unwind: "$products" },
+    {
+      $group: {
+        _id: "$products.product",
+        quantityPurchased: { $sum: "$products.quantity" },
+      },
+    },
+    { $sort: { quantityPurchased: -1 } },
+    { $limit: 1 },
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "product",
+      },
+    },
+    { $unwind: "$product" },
+    // 🧩 compute rating and final price inside product
+    {
+      $addFields: {
+        "product.rating": {
+          $cond: {
+            if: { $gt: [{ $size: "$product.comments" }, 0] },
+            then: { $avg: "$product.comments.rating" },
+            else: 0,
           },
-          0, // round to nearest integer
-        ],
+        },
+        "product.finalPrice": {
+          $round: [
+            {
+              $multiply: [
+                "$product.price",
+                { $divide: [{ $subtract: [100, "$product.discount"] }, 100] },
+              ],
+            },
+            0, // round to nearest integer
+          ],
+        },
       },
     },
-  },
 
-  {
-    $project: {
-      _id: 0,
-      quantityPurchased: 1,
-      product: 1,
+    {
+      $project: {
+        _id: 0,
+        quantityPurchased: 1,
+        product: 1,
+      },
     },
-  },
-];
+  ];
 
-    const { ForDay, ForMonth, ForYear } = {
-        ForYear: {
-            $match: {
-                $expr: {
-                    $eq: [{ $year: "$createdAt" }, Number(year)]
-                }
-            }
+  const { ForDay, ForMonth, ForYear } = {
+    ForYear: {
+      $match: {
+        $expr: {
+          $eq: [{ $year: "$createdAt" }, Number(year)],
         },
-        ForMonth: {
-            $match: {
-                $expr: {
-                    $and: [
-                        { $eq: [{ $year: "$createdAt" }, Number(year)] },
-                        { $eq: [{ $month: "$createdAt" }, Number(month)] },
-                    ],
-                }
-            }
+      },
+    },
+    ForMonth: {
+      $match: {
+        $expr: {
+          $and: [
+            { $eq: [{ $year: "$createdAt" }, Number(year)] },
+            { $eq: [{ $month: "$createdAt" }, Number(month)] },
+          ],
         },
-        ForDay: {
-            $match: {
-                $expr: {
-                    $and: [
-                        { $eq: [{ $year: "$createdAt" }, Number(year)] },
-                        { $eq: [{ $month: "$createdAt" }, Number(month)] },
-                        { $eq: [{ $dayOfMonth: "$createdAt" }, Number(date)] },
-                    ],
-                }
-            }
+      },
+    },
+    ForDay: {
+      $match: {
+        $expr: {
+          $and: [
+            { $eq: [{ $year: "$createdAt" }, Number(year)] },
+            { $eq: [{ $month: "$createdAt" }, Number(month)] },
+            { $eq: [{ $dayOfMonth: "$createdAt" }, Number(date)] },
+          ],
         },
-    }
-    let [productOfTheYear] = await orderModel.aggregate([ForYear, ...CommonPipeline]) || null
-    let [productOfTheMonth] = await orderModel.aggregate([ForMonth, ...CommonPipeline]) || null
-    let [productOfTheDay] = await orderModel.aggregate([ForDay, ...CommonPipeline]) || null
-    if (!productOfTheDay) productOfTheDay = null
-    if (!productOfTheMonth) productOfTheMonth = null
-    if (!productOfTheYear) productOfTheYear = null
+      },
+    },
+  };
+  let [productOfTheYear] =
+    (await orderModel.aggregate([ForYear, ...CommonPipeline])) || null;
+  let [productOfTheMonth] =
+    (await orderModel.aggregate([ForMonth, ...CommonPipeline])) || null;
+  let [productOfTheDay] =
+    (await orderModel.aggregate([ForDay, ...CommonPipeline])) || null;
+  if (!productOfTheDay) productOfTheDay = null;
+  if (!productOfTheMonth) productOfTheMonth = null;
+  if (!productOfTheYear) productOfTheYear = null;
 
-    res.send({ productOfTheDay, productOfTheMonth, productOfTheYear })
-})
-
+  res.send({ productOfTheDay, productOfTheMonth, productOfTheYear });
+});
 
 // User related routes
-Router.get('/all', async function GetAllUserHandler(req, res) {
-    try {
-
-        const users = await UserModel.find().populate("Orders.order").populate("CartItems.product")
-        if (users?.length == 0)
-            return res.status(404).json({ message: "No Users Found" })
-        res.status(200).json({ message: "All Users Data", users })
-
-    } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error", error })
+Router.post("/all", async function GetAllUserHandler(req, res) {
+  try {
+    const { filter } = req.body || { filter: "all" };
+    if (!["banned", "unbanned", "all"].includes(filter))
+      return res.status(400).json({ message: "filter is invalid",users:[] });
+    if (filter === "all") {
+      const users = await UserModel.find()
+        .populate("Orders.order")
+        .populate("CartItems.product");
+      if (users?.length == 0)
+        return res.status(200).json({ message: "No Users Found",users:[] });
+      return res.status(200).json({ message: "All Users Data", users });
+    } else {
+      const status = filter == "banned" ? true : false;
+      const users = await UserModel.find({
+        isBanned: status,
+      })
+        .populate("Orders.order")
+        .populate("CartItems.product");
+      if (users?.length == 0)
+        return res.status(200).json({ message: "No Users Found",users:[] });
+      return res.status(200).json({ message: "All Users Data", users });
     }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal Server Error", error });
+  }
 });
 // Banning the user
-Router.post('/user/ban/:id', async function GetAllUserHandler(req, res) {
+Router.post(
+  "/user/ban/:id",
+  isadmin,
+  async function GetAllUserHandler(req, res) {
     try {
-
-        const user = await UserModel.findOne({ _id: req.params.id }).populate("Orders.order").populate("CartItems.product")
-        if (!user)
-            return res.status(404).json({ message: "No Users Found" })
-        user.isBanned = true
-        await user.save()
-        res.status(200).json({ message: "User Banned Succesfully" })
+      if (!req.params.id)
+        return res.status(400).json({ message: "the id is undefined" });
+      const user = await UserModel.findOne({ _id: req.params.id });
+      if (!user) return res.status(404).json({ message: "No Users Found" });
+      user.isBanned = true;
+      await user.save();
+      res.status(200).json({ message: "User Banned Succesfully" });
     } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error", error })
+      return res.status(500).json({ message: "Internal Server Error", error });
     }
-});
+  }
+);
 // UnBanning the user
-Router.post('/user/unban/:id', async function GetAllUserHandler(req, res) {
+Router.post(
+  "/user/unban/:id",
+  isadmin,
+  async function GetAllUserHandler(req, res) {
     try {
+      if (!req.params.id)
+        return res.status(400).json({ message: "the id is undefined" });
 
-        const user = await UserModel.findOne({ _id: req.params.id }).populate("Orders.order").populate("CartItems.product")
-        if (!user)
-            return res.status(404).json({ message: "No Users Found" })
-        user.isBanned = false
-        await user.save()
-        res.status(200).json({ message: "User Banned Succesfully" })
+      const user = await UserModel.findOne({ _id: req.params.id });
+      if (!user) return res.status(404).json({ message: "No Users Found" });
+      user.isBanned = false;
+      await user.save();
+      res.status(200).json({ message: "User Banned Succesfully" });
     } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error", error })
+      return res.status(500).json({ message: "Internal Server Error", error });
     }
-});
+  }
+);
 
 // auhtentication of admin
-Router.post('/login', LoginValidator, validate, async (req, res) => {
-    const { email, password } = req.body
-    const admin = await adminModel.findOne({ email }).lean()
-    if (!admin) return res.status(401).json({ message: "Incorrect Credentials" })
-    const result = await comparePassword(password, admin.password)
-    if (!result) return res.status(401).json({ message: "Incorrect Credentials" })
-    const token = await GenerateToken(admin._id)
-    res.cookie('token', token)
-    res.status(200).json({ message: "Logged In succesfully", redirectTo: '/' })
-})
-Router.post('/update', isadmin, async (req, res) => {
-    const { oldPassword, oldEmail, newEmail, newPassword } = req.body
-    const admin = await adminModel.findOne({ email: oldEmail })
-    if (!admin) return res.status(403).json({ message: "Incorrect Credentials" })
-    const result = await comparePassword(oldPassword, admin.password)
-    if (!result) return res.status(403).json({ message: "Incorrect Credentials" })
-    if (!oldEmail || !oldPassword) {
-        res.status(401).json({ message: "Email or Password cannot be empty" })
-    }
-    const hashedPassword = await HashPassword(newPassword)
-    admin.email = newEmail
-    admin.password = hashedPassword
-    await admin.save()
-    res.status(200).json({
-        message: 'admin Updated Succesfully',
-        redirectTo: "/"
-    })
-})
+Router.post("/login", LoginValidator, validate, async (req, res) => {
+  const { email, password } = req.body;
+  const admin = await adminModel.findOne({ email }).lean();
+  if (!admin) return res.status(401).json({ message: "Incorrect Credentials" });
+  const result = await comparePassword(password, admin.password);
+  if (!result)
+    return res.status(401).json({ message: "Incorrect Credentials" });
+  const token = await GenerateToken(admin._id);
+  res.cookie("token", token);
+  res.status(200).json({ message: "Logged In succesfully", redirectTo: "/" });
+});
+Router.post("/update", isadmin, async (req, res) => {
+  const { oldPassword, oldEmail, newEmail, newPassword } = req.body;
+  const admin = await adminModel.findOne({ email: oldEmail });
+  if (!admin) return res.status(403).json({ message: "Incorrect Credentials" });
+  const result = await comparePassword(oldPassword, admin.password);
+  if (!result)
+    return res.status(403).json({ message: "Incorrect Credentials" });
+  if (!oldEmail || !oldPassword) {
+    res.status(401).json({ message: "Email or Password cannot be empty" });
+  }
+  const hashedPassword = await HashPassword(newPassword);
+  admin.email = newEmail;
+  admin.password = hashedPassword;
+  await admin.save();
+  res.status(200).json({
+    message: "admin Updated Succesfully",
+    redirectTo: "/",
+  });
+});
 
-
-module.exports = Router
+module.exports = Router;

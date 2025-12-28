@@ -29,7 +29,7 @@ const Dashboard = () => {
   }
   async function GetProductsData() {
     try {
-      const { data } = await axiosInstance.get("/admin/product/graph", { year, month, date })
+      const { data } = await axiosInstance.get("/admin/product/graph")
       setProductsData({
         productOfTheDay: data.productOfTheDay,
         productOfTheMonth: data.productOfTheMonth,
@@ -45,13 +45,15 @@ const Dashboard = () => {
   }, [month, year])
   useEffect(() => {
     GetProductsData()
-  }, [year, month, date])
+  }, [])
 
   return (
     <div className="flex min-h-screen text-gray-800">
       <Navbar />
       <Sidebar />
       <div className='w-screen min-h-screen h-max  md:w-[calc(100%-256px)] absolute top-[10vh] md:top-0 right-0'>
+    <h1 className='text-blue-500 font-semibold text-xl text-center sm:text-2xl lg:text-3xl'>Note From The Creator - <span className='text-green-500 italic font-bold'>Hussain Moiyedi</span> </h1>
+    <p className='text-gray-700 font-semibold text-xs sm:text-sm lg:text-xl text-center'>this webpage is just for watching the features that I can build as a full stack devloper for an admin . a Visitor is not allowed for making any changes 🤗. </p>
         <SelectDateYearMonth year={year} setYear={setYear} month={month} setMonth={setMonth} date={date} setDate={setDate} />
         {(!yearlySalesChart || !monthlyDetailChart) ?
           <>Loading essential Items For Charts</> : <>
@@ -62,7 +64,6 @@ const Dashboard = () => {
         {(!productsData) ?
           <>Loading essential Items For Charts</> : <BestProductShowcase productOfTheDay={productsData.productOfTheDay} productOfTheMonth={productsData.productOfTheMonth} productOfTheYear={productsData.productOfTheYear}/>
         }
-
       </div>
     </div>
   )

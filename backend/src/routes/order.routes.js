@@ -26,6 +26,7 @@ Router.get("/", async (req, res) => {
   return res.status(200).json({ messgae: "all orders", orders })
 })
 Router.get("/user", UserCanAcces, async (req, res) => {
+  
   const user = await UserModel.findById(req.user._id).populate("Orders.order")
   return res.status(200).json({ messgae: "all orders of the user", orders: user.Orders })
 })
