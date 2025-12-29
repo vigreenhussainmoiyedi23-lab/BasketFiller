@@ -79,87 +79,107 @@ Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scal
 ```bash
 git clone https://github.com/<your-username>/basket-filler.git
 cd basket-filler
-2️⃣ Backend Setup
-bash
-Copy code
+```
+
+### 2️⃣ Backend Setup
+```bash
 cd backend
 npm install
-Create a .env file in the backend root:
+```
 
-env
-Copy code
+Create a `.env` file in the backend root:
+```env
 PORT=5000
 MONGO_URI=<your_mongo_db_connection_string>
 JWT_SECRET=<your_jwt_secret>
 ADMIN_URL=https://basket-filler.vercel.app
 USER_URL=https://basket-filler-ixng.vercel.app
-Run the server:
+```
 
-bash
-Copy code
+Run the backend server:
+```bash
 npm run dev
-3️⃣ Frontend Setup
-bash
-Copy code
+```
+
+### 3️⃣ Frontend Setup
+```bash
 cd frontend
 npm install
 npm run dev
-Now open http://localhost:3000 in your browser.
+```
 
-🔐 Environment Variables
-Variable	Description
-PORT	Backend server port
-MONGO_URI	MongoDB connection string
-JWT_SECRET	Secret key for JWT token generation
-ADMIN_URL	URL of admin frontend
-USER_URL	URL of user frontend
+Open your browser at [http://localhost:3000](http://localhost:3000)
 
-🔗 API Routes
-🧍 Auth Routes
-Method	Endpoint	Description
-POST	/api/auth/register	Register a new user
-POST	/api/auth/login	Login user/admin
-POST	/api/auth/logout	Logout user
+---
 
-👤 User Routes
-Method	Endpoint	Description
-GET	/api/user/profile	Get user profile
-PUT	/api/user/profile	Update user profile
+## 🔐 Environment Variables
 
-⚙️ Admin Routes
-Method	Endpoint	Description
-GET	/api/admin/revenue/year	Get yearly revenue
-GET	/api/admin/product/graph	Get product sales graph
-POST	/api/admin/product	Add new product
-PUT	/api/admin/product/:id	Update product
-DELETE	/api/admin/product/:id	Delete product
+| Variable    | Description                    |
+|------------|--------------------------------|
+| `PORT`      | Backend server port            |
+| `MONGO_URI` | MongoDB connection string      |
+| `JWT_SECRET`| Secret key for JWT authentication |
+| `ADMIN_URL` | URL of admin frontend          |
+| `USER_URL`  | URL of user frontend           |
 
-🛍️ Product Routes
-Method	Endpoint	Description
-GET	/api/product	Get all products
-GET	/api/product/:id	Get single product
-POST	/api/product/review	Add a product review
+---
 
-🛒 Cart Routes
-Method	Endpoint	Description
-GET	/api/cart	Fetch cart items
-POST	/api/cart	Add to cart
-PUT	/api/cart/:id	Update cart item
-DELETE	/api/cart/:id	Remove item
+## 🔗 API Routes
 
-📦 Order Routes
-Method	Endpoint	Description
-POST	/api/order	Place new order
-GET	/api/order	Get user orders
+### 🧍 Auth Routes
+| Method | Endpoint              | Description         |
+|--------|---------------------|------------------|
+| POST   | /api/auth/register   | Register a new user |
+| POST   | /api/auth/login      | Login user/admin   |
+| POST   | /api/auth/logout     | Logout user        |
 
-💬 Comment Routes
-Method	Endpoint	Description
-POST	/api/comment	Add comment
-GET	/api/comment/:productId	Get comments for a product
+### 👤 User Routes
+| Method | Endpoint              | Description       |
+|--------|---------------------|-----------------|
+| GET    | /api/user/profile    | Get user profile |
+| PUT    | /api/user/profile    | Update profile   |
 
-📂 Folder Structure
-css
-Copy code
+### ⚙️ Admin Routes
+| Method | Endpoint                        | Description              |
+|--------|---------------------------------|-------------------------|
+| GET    | /api/admin/revenue/year          | Get yearly revenue      |
+| GET    | /api/admin/product/graph         | Product sales graph     |
+| POST   | /api/admin/product               | Add new product         |
+| PUT    | /api/admin/product/:id           | Update product          |
+| DELETE | /api/admin/product/:id           | Delete product          |
+
+### 🛍️ Product Routes
+| Method | Endpoint                | Description          |
+|--------|-----------------------|-------------------|
+| GET    | /api/product           | Get all products    |
+| GET    | /api/product/:id       | Get single product  |
+| POST   | /api/product/review    | Add product review  |
+
+### 🛒 Cart Routes
+| Method | Endpoint              | Description      |
+|--------|---------------------|----------------|
+| GET    | /api/cart            | Fetch cart items |
+| POST   | /api/cart            | Add to cart      |
+| PUT    | /api/cart/:id        | Update cart item |
+| DELETE | /api/cart/:id        | Remove item      |
+
+### 📦 Order Routes
+| Method | Endpoint          | Description      |
+|--------|-----------------|----------------|
+| POST   | /api/order       | Place new order |
+| GET    | /api/order       | Get user orders |
+
+### 💬 Comment Routes
+| Method | Endpoint                  | Description             |
+|--------|---------------------------|------------------------|
+| POST   | /api/comment              | Add comment            |
+| GET    | /api/comment/:productId   | Get comments for product |
+
+---
+
+## 📂 Folder Structure
+
+```
 backend/
 ├─ routes/
 ├─ controllers/
@@ -176,32 +196,39 @@ frontend/
 │  ├─ context/
 │  ├─ utils/
 │  └─ App.js
-☁️ Deployment
-🧩 Frontend (User) → https://basket-filler-ixng.vercel.app
+```
 
-🧑‍💼 Admin Dashboard → https://basket-filler.vercel.app
+---
 
-⚙️ Backend API → https://basketfiller.onrender.com
+## ☁️ Deployment
 
-🚧 Future Improvements
-💳 Integrate payment gateway (Stripe / Razorpay)
+- 🧩 **Frontend (User)** → [https://basket-filler-ixng.vercel.app](https://basket-filler-ixng.vercel.app)  
+- 🧑‍💼 **Admin Dashboard** → [https://basket-filler.vercel.app](https://basket-filler.vercel.app)  
+- ⚙️ **Backend API** → [https://basketfiller.onrender.com](https://basketfiller.onrender.com)
 
-🔔 Add real-time order status notifications
+---
 
-❤️ Add wishlist and favorites feature
+## 🚧 Future Improvements
 
-🤖 AI-based product recommendations
+- 💳 Integrate payment gateway (Stripe / Razorpay)  
+- 🔔 Add real-time order status notifications  
+- ❤️ Add wishlist and favorites feature  
+- 🤖 AI-based product recommendations  
+- 🧠 Role-based admin access levels  
+- 📧 Email notifications for order updates  
 
-🧠 Role-based admin access levels
+---
 
-📧 Email notifications for order updates
+## 📝 License
 
-📝 License
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.  
 You are free to use, modify, and distribute it with attribution.
 
-💡 Author
-Developed with ❤️ by Hussain
-📧 For inquiries: [your-email@example.com]
-🌐 User Frontend: https://basket-filler-ixng.vercel.app
-🌐 Admin Dashboard: https://basket-filler.vercel.app
+---
+
+## 💡 Author
+
+Developed with ❤️ by **Hussain**  
+📧 For inquiries: *[your-email@example.com]*  
+🌐 User Frontend: [https://basket-filler-ixng.vercel.app](https://basket-filler-ixng.vercel.app)  
+🌐 Admin Dashboard: [https://basket-filler.vercel.app](https://basket-filler.vercel.app)
