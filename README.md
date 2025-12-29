@@ -229,6 +229,6 @@ You are free to use, modify, and distribute it with attribution.
 ## 💡 Author
 
 Developed with ❤️ by **Hussain**  
-📧 For inquiries: *[your-email@example.com]*  
+📧 For inquiries: *vigreenhussainmoiyedi23@gmail.com*  
 🌐 User Frontend: [https://basket-filler-ixng.vercel.app](https://basket-filler-ixng.vercel.app)  
 🌐 Admin Dashboard: [https://basket-filler.vercel.app](https://basket-filler.vercel.app)
