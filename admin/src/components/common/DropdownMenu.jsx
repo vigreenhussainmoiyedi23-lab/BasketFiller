@@ -12,9 +12,9 @@ function DropDownMenu() {
         { name: "Security", path: "/security", icon: <Shield size={20} /> },
     ];
     return (
-        <Menu className="z-50 relative">
+        <Menu >
             <MenuButton><MenuIcon /></MenuButton>
-            <MenuItems anchor="bottom" className='w-full sm:h-[90dvh] h-[90dvh] text-5xl   bg-black/5 flex items-center justify-center flex-col backdrop-blur-2xl'>
+            <MenuItems anchor="bottom" className='w-full sm:h-[90dvh] h-[90dvh] text-5xl z-50  bg-black/5 flex items-center justify-center flex-col backdrop-blur-2xl'>
               {links.map((link,idx)=>{
                 return   <MenuItem key={idx}>
                  <Link className='flex items-center text-xl gap-3 justify-center min-w-max' to={link.path}>{link.name} {link.icon}</Link>
