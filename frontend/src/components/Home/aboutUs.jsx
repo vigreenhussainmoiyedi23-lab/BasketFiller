@@ -22,7 +22,7 @@ const AboutUs = () => {
       <div className="w-full md:w-1/2 h-64 md:h-[90vh] flex items-center justify-center">
         {/* You can put an image or illustration here */}
         <div className="w-full h-full bg-gray-700/20 rounded-xl flex items-center justify-center">
-          <img className='w-full h-full' src="/public/images/about1.jpg" alt="BasketFiller Shop" />
+          <img className='w-full h-full' src="/images/about1.jpg" alt="BasketFiller Shop" />
         </div>
       </div>
       

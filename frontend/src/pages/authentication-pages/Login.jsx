@@ -62,7 +62,7 @@ const Login = () => {
 
   return (
     <div className='w-screen h-screen overflow-hidden bg-center bg-cover text-white/90 flex justify-center items-center'
-      style={{ backgroundImage: "url('public/images/bg.jpg')" }}>
+      style={{ backgroundImage: "url('/images/bg.jpg')" }}>
       <ToastContainer
         position="top-left"
         autoClose={1000}

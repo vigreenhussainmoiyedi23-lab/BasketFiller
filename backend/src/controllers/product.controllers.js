@@ -97,7 +97,7 @@ async function FilterHandler(req, res) {
     }
     if (maxPrice) {
       let max = maxPrice;
-      if (!maxPrice) max = 100000;
+      if (!max) max = 100000;
       pipeline.push({
         $match: {
           finalPrice: {

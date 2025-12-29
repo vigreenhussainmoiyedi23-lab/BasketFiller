@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const { UserCanAcces } = require("./middlewares/AuthenticationMiddleware");
 const adminUrl = "https://basket-filler.vercel.app";
 const userUrl = "https://basket-filler-ixng.vercel.app";
-
+const devlopementUrls=["http://localhost:5173","http://localhost:5174/"]
 // _______requiring all the routers____
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || [adminUrl, userUrl, "http://localhost:3000"].includes(origin)) {
+    if (!origin || [adminUrl, userUrl, ...devlopementUrls].includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
