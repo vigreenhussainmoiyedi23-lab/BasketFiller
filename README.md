@@ -4,7 +4,6 @@
 Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scalability, performance, and maintainability.
 
 ---
-
 ## 🚀 Live Demo
 
 - 🛍️ **User Frontend:** [https://basket-filler-ixng.vercel.app](https://basket-filler-ixng.vercel.app)  
@@ -12,6 +11,12 @@ Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scal
 - 🌐 **Backend API:** [https://basketfiller.onrender.com](https://basketfiller.onrender.com)
 
 ---
+## Contributors
+- alvafist (Hussain Moiyedi)
+- vigreenhussainmoiyedi23-lab (Hussain Moiyedi)
+
+---
+
 
 ## 🧭 Table of Contents
 
