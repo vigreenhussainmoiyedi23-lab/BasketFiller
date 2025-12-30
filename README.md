@@ -81,6 +81,7 @@ Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scal
 - multer
 - imagekit
 - bcrypt
+
 **Deployment**
 - **Frontend (User/Admin):** Vercel  
 - **Backend:** Render  
