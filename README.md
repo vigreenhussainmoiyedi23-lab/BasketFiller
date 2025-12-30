@@ -63,6 +63,11 @@ Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scal
 - React.js  
 - Axios  
 - Tailwind CSS  
+-lucide-react
+-react-router-dom
+-react-hot-toast
+-react-loading-skeleton
+-headlessui/react
 
 **Backend**
 - Node.js  
@@ -71,7 +76,11 @@ Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scal
 - JWT Authentication  
 - Cookie Parser  
 - CORS  
-
+-Express-Validator
+-dotenv
+-multer
+-imagekit
+-bcrypt
 **Deployment**
 - **Frontend (User/Admin):** Vercel  
 - **Backend:** Render  
