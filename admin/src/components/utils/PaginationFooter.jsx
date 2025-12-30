@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const PaginationFooter = ({ filter, setFilter, totalPages }) => {
@@ -18,6 +18,9 @@ const PaginationFooter = ({ filter, setFilter, totalPages }) => {
     if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
+useEffect(() => {
+  getPageNumbers()
+}, [totalPages])
 
   return (
     <div className="flex justify-center items-center gap-2 mt-6 select-none">
