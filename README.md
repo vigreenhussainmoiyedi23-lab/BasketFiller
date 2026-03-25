@@ -1,8 +1,15 @@
 # 🛒 Basket Filler
 
-**Basket Filler** is a full-stack e-commerce platform that delivers a smooth and secure online shopping experience for users while giving admins powerful tools to manage products, orders, and analytics.  
-Built with **Node.js**, **Express**, **MongoDB**, and **React**, it ensures scalability, performance, and maintainability.
+🛒 Basket Filler — Scalable MERN E-Commerce Engine
 
+A full-stack e-commerce platform designed with secure authentication, optimized data handling, and admin-level analytics, simulating real-world online store operations.
+
+⚡ Engineering Highlights
+Implemented JWT + cookie-based authentication with secure session handling
+Built analytics dashboard with aggregated queries for real-time revenue insights
+Optimized image delivery using CDN (ImageKit), reducing load times
+Designed RESTful APIs with clear separation of concerns for scalability
+Implemented efficient cart and order workflows ensuring data consistency
 ---
 ## 🚀 Live Demo
 
