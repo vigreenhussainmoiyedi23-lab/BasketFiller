@@ -5,7 +5,8 @@
 A full-stack e-commerce platform designed with secure authentication, optimized data handling, and admin-level analytics, simulating real-world online store operations.
 
 ### ⚡ Engineering Highlights
-## Implemented JWT + cookie-based authentication with secure session handling
+##
+Implemented JWT + cookie-based authentication with secure session handling
 Built analytics dashboard with aggregated queries for real-time revenue insights
 Optimized image delivery using CDN (ImageKit), reducing load times
 Designed RESTful APIs with clear separation of concerns for scalability
