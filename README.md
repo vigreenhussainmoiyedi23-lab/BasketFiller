@@ -24,7 +24,10 @@ Implemented efficient cart and order workflows ensuring data consistency
 - vigreenhussainmoiyedi23-lab (Hussain Moiyedi)
 
 ---
-
+### 📈 Performance Considerations
+Reduced unnecessary re-renders using optimized state handling
+Minimized API calls using caching strategies
+Designed APIs for efficient data fetching and scalability
 
 ## 🧭 Table of Contents
 
